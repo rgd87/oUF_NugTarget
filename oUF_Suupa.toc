@@ -1,0 +1,10 @@
+## Interface: 50001
+## Title: oUF_Suupa
+## Author: d87
+## Version: 1
+## Dependencies: oUF
+## Notes: oUF layout
+player.lua
+target.lua
+pet.lua
+focus.lua
