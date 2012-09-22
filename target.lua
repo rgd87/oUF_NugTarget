@@ -280,7 +280,7 @@ local SuupaTarget = function( self, unit)
     mbbg:SetAllPoints(mb)
     mbbg:SetTexture[[Interface\AddOns\oUF_Suupa\target\targetPowerBar.tga]]
     mb.bg = mbbg
-    mb.bg.multiplier = 0.5
+    mb.bg.multiplier = 0.4
     
 --~     mb.colorType = true --deprecated 1.1
     mb.colorPower = true
