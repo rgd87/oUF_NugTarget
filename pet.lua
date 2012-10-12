@@ -1,12 +1,13 @@
-local texture = [[Interface\AddOns\oUF_Suupa\statusbar]]
+local texture = [[Interface\AddOns\oUF_Suupa\vsb_pet]]
 
 local mana = {.4, .4, 1}
 local colors = setmetatable({
-    health = { 1, .3, .3}, {__index = oUF.health},
+    health = { 1, .2, .2}, {__index = oUF.health},
 	power = setmetatable({
 		["MANA"] = mana,
 		["RAGE"] = {0.9, 0, 0},
 --~ 		["FOCUS"] = {0.71, 0.43, 0.27},
+        ["POWER_TYPE_FEL_ENERGY"] = {134/255, 113/255, 183/255},--{1, 1, 0.3},
 		["ENERGY"] = {1, 1, 0.4},
 	}, {__index = oUF.colors.power}),
 }, {__index = oUF.colors})
@@ -23,8 +24,8 @@ local menu = function(self)
 end
 
 function oUFSuupaPet(self, unit)
-    local height = 30
-    local width = 140
+    local height = 90
+    local width = 24
     self:SetHeight(height)
     self:SetWidth(width)
 
@@ -49,9 +50,10 @@ function oUFSuupaPet(self, unit)
     
     local hp = CreateFrame("StatusBar",nil,self)
     hp:SetStatusBarTexture(texture)
-    hp:SetStatusBarColor(1, .3, .3)
+    hp:SetOrientation("VERTICAL")
+    hp:SetStatusBarColor(1, 0, 0)
     hp:SetPoint("TOPLEFT",self,"TOPLEFT",0,0)
-    hp:SetPoint("BOTTOMRIGHT",self,"RIGHT",0,1)
+    hp:SetPoint("BOTTOMRIGHT",self,"BOTTOMLEFT",12,22)
     
     hp.colorTapping = true
     hp.colorDisconnected = true
@@ -67,13 +69,14 @@ function oUFSuupaPet(self, unit)
     
     
     local mb = CreateFrame("StatusBar",nil,self)
-    mb:SetWidth(131)
-    mb:SetHeight(19)
+    mb:SetWidth(19)
+    mb:SetHeight(131)
+    mb:SetOrientation("VERTICAL")
     
     mb:SetStatusBarTexture(texture)
     mb:SetStatusBarColor(.4, .4, 1)
+    mb:SetPoint("TOPLEFT",hp,"TOPRIGHT",2,0)
     mb:SetPoint("BOTTOMRIGHT",self,"BOTTOMRIGHT",0,0)
-    mb:SetPoint("TOPLEFT",self,"LEFT",0,-1)
     
     local mbbg = mb:CreateTexture(nil,"BACKGROUND")
     mbbg:SetAllPoints(mb)
@@ -93,4 +96,5 @@ end
 oUF:RegisterStyle("playetpet", oUFSuupaPet)
 oUF:SetActiveStyle"playetpet"
 local pet = oUF:Spawn("pet","oUF_Pet")
-pet:SetPoint("BOTTOMLEFT",oUF_Player,"BOTTOMRIGHT",-18,2)
+-- pet:SetPoint("BOTTOMLEFT",oUF_Player,"BOTTOMRIGHT",-13,59)
+pet:SetPoint("BOTTOMLEFT",oUF_Player,"BOTTOMRIGHT",-45,72)

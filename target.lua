@@ -13,6 +13,7 @@ local font2size = 13
 local mana = {.4, .4, 1}
 local colors = setmetatable({
     health = { 1, .3, .3}, {__index = oUF.health},
+    execute = { 1, .3, .45 },
 	power = setmetatable({
 		["MANA"] = mana,
 		["RAGE"] = {0.9, 0, 0},
@@ -59,20 +60,72 @@ local siValue = function(val)
 	end
 end
 
-local PostUpdateHealth = function(self, event, unit, bar, min, max)
-    if unit == "player" then
-        if bar.value then bar.value:SetFormattedText('%s | %s', min, math.floor(min/max*1000)/10) end
-    elseif unit == "pet" then
-        return
-    elseif unit == "targettarget" then
-        bar.value:SetFormattedText('%s', math.floor(min/max*1000)/10)
-    elseif unit == "target" then
---~ 		bar.value:SetFormattedText('%s\n%s', siValue(min), math.floor(min/max*1000)/10)
-        bar.value:SetText(siValue(min))
-        bar.perc:SetText(math.floor(min/max*100))
-    else
-		bar.value:SetFormattedText('%s | %s', siValue(min), math.floor(min/max*1000)/10)
-	end
+local execute_range
+
+local ranges = {
+    WARLOCK1 = 0.2,
+    WARLOCK2 = 0.25,
+    WARLOCK3 = 0.2,
+
+    WARRIOR1 = 0.2,
+    WARRIOR2 = 0.2,
+    WARRIOR3 = 0.2,
+
+    ROGUE1 = 0.35,
+
+    PRIEST3 = 0.2,
+}
+local SPELLS_CHANGED = function()
+    local class = select(2, UnitClass("player"))
+    local spec = GetSpecialization()
+    if not spec then execute_range = nil; return end
+    execute_range = ranges[class..spec]
+end
+local f = CreateFrame("Frame")
+f:RegisterEvent("SPELLS_CHANGED")
+-- f:RegisterEvent("PLAYER_ENTERING_WORLD")
+f:SetScript("OnEvent", SPELLS_CHANGED)
+
+
+local UnitIsTapped = UnitIsTapped
+local UnitIsEnemy = UnitIsEnemy
+local UnitIsFriend = UnitIsFriend 
+local PostUpdateHealth = function(self, unit, cur, max)
+    -- print(unit, cur, max, execute_range )
+    local health = self
+    local self = health:GetParent()
+    local r, g, b, t
+    if(health.colorTapping and UnitIsTapped(unit) and not UnitIsTappedByPlayer(unit)) then
+        t = self.colors.tapped
+    elseif(health.colorDisconnected and not UnitIsConnected(unit)) then
+        t = self.colors.disconnected
+    elseif(health.colorClass and UnitIsPlayer(unit)) or
+        (health.colorClassNPC and not UnitIsPlayer(unit)) or
+        (health.colorClassPet and UnitPlayerControlled(unit) and not UnitIsPlayer(unit)) then
+        local _, class = UnitClass(unit)
+        t = self.colors.class[class]
+    elseif(health.colorReaction and UnitReaction(unit, 'player')) then
+        t = self.colors.reaction[UnitReaction(unit, "player")]
+    elseif(health.colorSmooth) then
+        r, g, b = self.ColorGradient(min, max, unpack(health.smoothGradient or self.colors.smooth))
+    elseif execute_range and cur/max < execute_range then
+        t = self.colors.execute
+    elseif(health.colorHealth) then
+        t = self.colors.health
+    end
+
+    if(t) then
+        r, g, b = t[1], t[2], t[3]
+    end
+
+    if(b) then
+        health:SetStatusBarColor(r, g, b)
+
+        local bg = health.bg
+        if(bg) then local mu = bg.multiplier or 1
+            bg:SetVertexColor(r * mu, g * mu, b * mu)
+        end
+    end
 end
 
 local PostUpdatePower = function(self, event, unit, bar, min, max)
@@ -259,7 +312,7 @@ local SuupaTarget = function( self, unit)
     self.Health = hp
     
 --~     return nil
---~     self.PostUpdateHealth = PostUpdateHealth
+    self.Health.    PostUpdate = PostUpdateHealth
     
 
 --~ 	self.OverrideUpdateHealth = OverrideUpdateHealth
@@ -280,7 +333,7 @@ local SuupaTarget = function( self, unit)
     mbbg:SetAllPoints(mb)
     mbbg:SetTexture[[Interface\AddOns\oUF_Suupa\target\targetPowerBar.tga]]
     mb.bg = mbbg
-    mb.bg.multiplier = 0.5
+    mb.bg.multiplier = 0.4
     
 --~     mb.colorType = true --deprecated 1.1
     mb.colorPower = true
@@ -391,7 +444,7 @@ local SuupaTarget = function( self, unit)
             -- if 
         -- end
         debuffs.PostUpdateIcon = function(icons, unit, icon, index, offset)
-            icon.icon:SetDesaturated(not (icon.owner == "player"))
+            icon.icon:SetDesaturated(not (icon.owner == "player" or icon.owner == "pet" or UnitIsFriend("player", unit)))
         end
         
         debuffs.showDebuffType = true

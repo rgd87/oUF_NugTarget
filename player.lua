@@ -19,40 +19,47 @@ local BuffFunc = function(spellID)
     return select(8,UnitAura("player",GetSpellInfo(spellID),nil,"HELPFUL"))
 end
 
-local SoulLink = function(spellID)
---~     local got_soullink = UnitAura("player",GetSpellInfo(19028),nil,"HELPFUL")
-    return (not UnitAffectingCombat("player") or UnitAura("player",GetSpellInfo(85768),nil,"HELPFUL")) and "player"
-    
---~     if got_darkintent and (not UnitExists("pet") or got_soullink) then
---~         return "player"
---~     end
+local function BuffGroup(...)
+    local buffs = {}
+    for i=1,select("#", ...) do
+        local id = select(i, ...)
+        buffs[id] = GetSpellInfo(id)
+    end
+    return function()
+        for spellID, spellName in pairs(buffs) do
+            local name, _,_, count, _, duration, expirationTime, caster, _,_, aura_spellID = UnitAura("player", spellName, nil, "HELPFUL")
+            if name then return true, caster end
+        end
+    end
 end
 --~ local WarrFunc = function(spellID)
 
     local _, playerClass = UnitClass("player")
     if playerClass == "PRIEST" then
-        rem1.buffs = { 588, 73413 }
-        rem1.func = BuffFunc
+        rem1.func = BuffGroup(588, 73413) -- Inner Fire, Inner Will
+        rem2.func = BuffGroup(21562) -- Fort
     end
     if playerClass == "WARLOCK" then
-        rem1.buffs = { 109773 }
-        rem1.func = BuffFunc
+        rem1.func = BuffGroup(1459, 109773) -- Arcane Brilliance, Dark Intent
         -- rem2.buffs = { 0 } -- 25228 is the actual buff 
         -- rem2.func = SoulLink
     end
     if playerClass == "WARRIOR" then
-        rem1.buffs = { 6673, 469 }
-        rem1.func = BuffFunc
+        local battle = BuffGroup(6673, 19506, 57330) -- battle shout, trueshot, horn of winter
+        local commanding = BuffGroup(469, 6307, 21562) -- commanding, blood pact, pwf
+        rem1.func = function() 
+            local present, caster = battle()
+            if present and caster ~= "player" then
+                return commanding()
+            else return present end
+        end
     end
     if playerClass == "DEATHKNIGHT" then
-        rem1.buffs = { 57330 }
-        rem1.func = BuffFunc
+        rem1.func = BuffGroup(6673, 19506, 57330) -- battle shout, trueshot, horn of winter
     end
     if playerClass == "ROGUE" then
-        rem1.buffs = { 2823, 8679 }
-        rem1.func = BuffFunc
-        rem2.buffs = { 3408, 5761 }
-        rem2.func = BuffFunc
+        rem1.func = BuffGroup(2823, 8679)
+        rem2.func = BuffGroup(3408, 5761, 108211, 108215)
     end
 
 
@@ -141,18 +148,10 @@ local function CreateIndicator(name, parent, opts)
         if self.OnUpdateCounter < TICK_PERIOD then return end
         self.OnUpdateCounter = 0
         
-        local found
-        local name, rank, icon, count, debuffType, duration, expirationTime, caster
-        for _,spellID in ipairs(self.opts.buffs) do
---~             name, rank, icon, count, debuffType, duration, expirationTime, caster = UnitAura("player",GetSpellInfo(spellID),nil,"HELPFUL")
-            local caster = self.opts.func(spellID)
-            if caster == "player" then
-                found = true
-            end
-        end
+        local found = self.opts.func()
         if not found then self:Shine() end
     end
-    if f.opts.buffs then
+    if f.opts.func then
         f:SetScript("OnUpdate", f.OnUpdate)
     end
     
