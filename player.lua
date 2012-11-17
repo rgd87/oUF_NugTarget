@@ -40,18 +40,31 @@ end
         rem2.func = BuffGroup(21562) -- Fort
     end
     if playerClass == "WARLOCK" then
-        rem1.func = BuffGroup(1459, 109773) -- Arcane Brilliance, Dark Intent
+        rem1.func = BuffGroup(1459, 109773, 61316) -- Arcane Brilliance, Dark Intent, Dalaran Brilliance
         -- rem2.buffs = { 0 } -- 25228 is the actual buff 
         -- rem2.func = SoulLink
     end
     if playerClass == "WARRIOR" then
         local battle = BuffGroup(6673, 19506, 57330) -- battle shout, trueshot, horn of winter
         local commanding = BuffGroup(469, 6307, 21562) -- commanding, blood pact, pwf
+        local GetSpecialization = GetSpecialization
+        local GetShapeshiftFormID = GetShapeshiftFormID
+        -- Battle Stance - 17
+        -- Defensive Stance - 18
+        -- Berserker Stance - 19
         rem1.func = function() 
             local present, caster = battle()
             if present and caster ~= "player" then
                 return commanding()
             else return present end
+        end
+
+        rem2.func = function()
+            if      GetSpecialization() == 1 then return GetShapeshiftFormID() == 17
+            elseif  GetSpecialization() == 2 then return GetShapeshiftFormID() == 17
+            elseif  GetSpecialization() == 3 then return GetShapeshiftFormID() == 18
+            end
+            return true
         end
     end
     if playerClass == "DEATHKNIGHT" then

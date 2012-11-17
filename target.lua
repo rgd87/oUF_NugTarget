@@ -9,6 +9,24 @@ local font1size = 8
 local font2 = [[Interface\AddOns\oUF_Suupa\fonts\ClearFontBold.ttf]]
 local font2size = 13
 
+oUF.Tags.Events["shorthp"] = "UNIT_HEALTH"
+oUF.Tags.Methods["shorthp"] = [[
+function(u)
+    local floor = math.floor
+    local v = UnitHealth(u)
+    local kks = floor(v/1000000)
+    if kks > 10 then
+        return kks.."kk"
+    else
+        kks = floor(v/1000)
+        if  kks > 10 then
+            return kks.."k"
+        else
+            return v
+        end
+    end
+end
+]]
 
 local mana = {.4, .4, 1}
 local colors = setmetatable({
@@ -211,6 +229,69 @@ local function CreateHBar(name, parent)
 end
 
 
+local function GetPercentColor(percent)
+    if percent <= 0 then
+        return 1, 0, 0
+    elseif percent <= 0.5 then
+        return 1, percent*2, 0
+    elseif percent >= 1 then
+        return 0, 1, 0
+    else
+        return 2 - percent*2, 1, 0
+    end
+end
+
+local function CreateThreatBar(parent)
+    local f = CreateFrame("StatusBar", "$parent_ThreatBar", parent)
+    local width, height= 3, 20
+    local tex = [[Interface\AddOns\oUF_Suupa\vstatusbar]]
+    f:SetOrientation("VERTICAL")
+    f:SetWidth(width)
+    f:SetHeight(height)
+    f:SetMinMaxValues(0,1)
+    
+    local backdrop = {
+        bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", tile = true, tileSize = 0,
+        insets = {left = -2, right = -2, top = -2, bottom = -2},
+    }
+    f:SetBackdrop(backdrop)
+    f:SetBackdropColor(0,0,0,0.5)
+    f:SetStatusBarTexture(tex)
+    -- 
+    
+    local bg = f:CreateTexture(nil,"BACKGROUND")
+    bg:SetTexture(tex)
+    bg:SetAllPoints(f)
+    f.bg = bg
+
+    f.SetColor = function(self, r,g,b)
+        r,g,b = r+.3, g+.3, b+.3
+        self:SetStatusBarColor(r,g,b)
+        self.bg:SetVertexColor(r*.3,g*.3,b*.3)
+    end
+
+    f:RegisterUnitEvent("UNIT_THREAT_LIST_UPDATE", "target")
+    f:RegisterEvent("PLAYER_TARGET_CHANGED")
+
+    local UnitExists = UnitExists
+    local IsInGroup = IsInGroup
+    f:SetScript("OnEvent", function(self, event)
+        if UnitExists("target") and (IsInGroup() or UnitExists("pet") ) then
+            local isTanking, state, scaledPercent, rawPercent, threatValue = UnitDetailedThreatSituation("player", "target")
+            if scaledPercent then
+                self:SetColor(GetPercentColor(1 - scaledPercent/100))
+                self:SetValue(scaledPercent/100)
+                self:Show()
+                return
+            end
+        end
+        self:Hide() 
+    end)
+
+    return f
+end
+
+
 local SuupaTarget = function( self, unit)
 --~     BeenThere = "yes"
 --~     local width = settings[unit.."-width"]
@@ -297,7 +378,7 @@ local SuupaTarget = function( self, unit)
         hpp:SetTextColor(0, 1, 0)
         hpp:SetPoint("TOPLEFT", self.Portrait, "TOPLEFT", 0, 1)
 --~         hpp.frequentUpdates = true
-        self:Tag(hpp, '[curhp]')
+        self:Tag(hpp, '[shorthp]')
 --~         hp.value = hpp
         
         local hppp = hp:CreateFontString(nil, "OVERLAY", self.Portrait)
@@ -312,7 +393,7 @@ local SuupaTarget = function( self, unit)
     self.Health = hp
     
 --~     return nil
-    self.Health.    PostUpdate = PostUpdateHealth
+    self.Health.PostUpdate = PostUpdateHealth
     
 
 --~ 	self.OverrideUpdateHealth = OverrideUpdateHealth
@@ -382,6 +463,13 @@ local SuupaTarget = function( self, unit)
         info:SetPoint("BOTTOMRIGHT", self.Portrait, "BOTTOMRIGHT", 1, 1)
 
         self.Info = info
+
+
+        local threatbar = CreateThreatBar(self)
+        threatbar:SetWidth(4)
+        threatbar:SetHeight(25)
+        threatbar:SetPoint("BOTTOMRIGHT", self.Portrait, "BOTTOMLEFT", -9, 6)
+        threatbar:SetColor( 0.3, 0, 0)
         --self.UNIT_LEVEL = updateInfoString
         --self:RegisterEvent"UNIT_LEVEL"
 --~     end
@@ -414,16 +502,31 @@ local SuupaTarget = function( self, unit)
     --==< AURAS >==--
 	if(unit == 'target') then
 		-- Buffs
-        disableCC = function (self, button, icons, index, debuff)
+        local PostCreate = function (self, button, icons, index, debuff)
             button.cd:SetReverse(true)
             button.cd.noCooldownCount = true -- for OmniCC
+            local overlay = button.overlay
+            overlay:SetTexCoord(0,1,0,1)
+            button.icon:SetTexCoord(0.05, 0.95, 0.05, 0.95)
+            -- if not overlay then
+            --     overlay = button:CreateTexture("$parentBorder", "OVERLAY")
+            --     overlay:SetWidth(33); overlay:SetHeight(32);
+            --     overlay:SetPoint("CENTER",0,0)
+            -- end
+            -- button.overlay = overlay
+            overlay:SetTexture([[Interface\AddOns\oUF_Suupa\buffBorder]])
+            if not button.isDebuff then
+                overlay:Show()
+                overlay:SetVertexColor(0.6,0.6,0.6, 1)
+                overlay.Hide = overlay.Show
+            end
         end
         
 		local buffs = CreateFrame("Frame", "oUF_Nuga_Buffs", self)
 		buffs:SetPoint("TOPLEFT", self, "TOPRIGHT",-5,-10)
 		buffs:SetHeight(24)
 		buffs:SetWidth(72)
-        buffs.PostCreateIcon = disableCC
+        buffs.PostCreateIcon = PostCreate
 
 		buffs.size = 24
         buffs.initialAnchor = "TOPLEFT"
@@ -434,24 +537,36 @@ local SuupaTarget = function( self, unit)
 
 		-- Debuffs
 		local debuffs = CreateFrame("Frame", "oUF_Nuga_Debuffs", self)
-		debuffs:SetPoint("TOPRIGHT", self, "BOTTOMRIGHT",-10,0)
+		debuffs:SetPoint("TOPRIGHT", self, "BOTTOMRIGHT",-27,5)
 		debuffs:SetHeight(1)
-		debuffs:SetWidth(width-100)
-        debuffs.PostCreateIcon = disableCC
+		debuffs:SetWidth(width-120)
+        debuffs.num = 16
+        debuffs.PostCreateIcon = PostCreate
 
         -- debuffs.CustomFilter = function (   self, unit, icon, name, rank, texture, count, dtype,
                                             -- duration, timeLeft, caster, isStealable, shouldConsolidate, spellID)
             -- if 
         -- end
         debuffs.PostUpdateIcon = function(icons, unit, icon, index, offset)
-            icon.icon:SetDesaturated(not (icon.owner == "player" or icon.owner == "pet" or UnitIsFriend("player", unit)))
+            -- icon.icon:SetScale(
+            -- if icon.o
+            -- print(unit)
+            if icon.owner == "player" or icon.owner == "pet" or UnitIsFriend("player", unit) then
+                icon.icon:SetDesaturated(0)
+                -- icon:SetSize(36,36)
+            else
+                icon.icon:SetDesaturated(1)
+                -- icon:SetSize(28,28)
+            end
+
+            
         end
         
         debuffs.showDebuffType = true
 		debuffs.initialAnchor = "TOPLEFT"
         debuffs["growth-x"] = "RIGHT"
         debuffs["growth-y"] = "DOWN"
-		debuffs.size = 28
+		debuffs.size = 24--28
 
 		self.Debuffs = debuffs
 --~ 	else
@@ -660,13 +775,17 @@ local target = oUF:Spawn("target","oUF_Target")
 --~ target:SetPoint("CENTER", 219, 1)
 --~ target:SetPoint("CENTER", 470, 1)
 --~ target:SetPoint("CENTER", 490, 0)
-target:SetPoint("LEFT", UIParent, "CENTER", 230, 0)
+-- target:SetPoint("LEFT", UIParent, "CENTER", 230, 0)
+target:SetPoint("LEFT", UIParent, "CENTER", 230, -70)
+-- target:SetPoint("TOPLEFT", UIParent, "CENTER", 120, -100)
+-- target:SetPoint("TOPLEFT", UIParent, "CENTER", 230, -100)
 
 
 oUF:RegisterStyle("SuupaTOT", SuupaTOT)
 oUF:SetActiveStyle"SuupaTOT"
 local targettarget = oUF:Spawn("targettarget","oUF_TargetTarget")
 targettarget:SetPoint("BOTTOM",target,"TOP",61,-15)
+-- /nrun setpos point=CENTER parent=oUF_Target to=TOPLEFT x=-11 y=-21
 
 
 --~ oUF:RegisterStyle("TargetCast", oUF_Suupa_CastBar)
