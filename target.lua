@@ -14,13 +14,13 @@ oUF.Tags.Methods["shorthp"] = [[
 function(u)
     local floor = math.floor
     local v = UnitHealth(u)
-    local kks = floor(v/1000000)
-    if kks > 10 then
-        return kks.."kk"
+    local ms = floor(v/1000000)
+    if ms > 10 then
+        return ms.."M"
     else
-        kks = floor(v/1000)
-        if  kks > 10 then
-            return kks.."k"
+        local ks = floor(v/1000)
+        if  ks > 10 then
+            return ks.."K"
         else
             return v
         end
@@ -91,6 +91,8 @@ local ranges = {
 
     ROGUE1 = 0.35,
 
+    PRIEST1 = 0.2,
+    PRIEST2 = 0.2,
     PRIEST3 = 0.2,
 }
 local SPELLS_CHANGED = function()
@@ -105,7 +107,7 @@ f:RegisterEvent("SPELLS_CHANGED")
 f:SetScript("OnEvent", SPELLS_CHANGED)
 
 
-local UnitIsTapped = UnitIsTapped
+local UnitIsTapDenied = UnitIsTapDenied
 local UnitIsEnemy = UnitIsEnemy
 local UnitIsFriend = UnitIsFriend 
 local PostUpdateHealth = function(self, unit, cur, max)
@@ -113,7 +115,8 @@ local PostUpdateHealth = function(self, unit, cur, max)
     local health = self
     local self = health:GetParent()
     local r, g, b, t
-    if(health.colorTapping and UnitIsTapped(unit) and not UnitIsTappedByPlayer(unit)) then
+    if (health.colorTapping and not UnitPlayerControlled(unit) and
+        UnitIsTapDenied(unit) ) then
         t = self.colors.tapped
     elseif(health.colorDisconnected and not UnitIsConnected(unit)) then
         t = self.colors.disconnected
@@ -552,10 +555,12 @@ local SuupaTarget = function( self, unit)
             -- if icon.o
             -- print(unit)
             if icon.owner == "player" or icon.owner == "pet" or UnitIsFriend("player", unit) then
-                icon.icon:SetDesaturated(0)
+                icon:SetAlpha(1)
+                -- icon.icon:SetDesaturated(0)
                 -- icon:SetSize(36,36)
             else
-                icon.icon:SetDesaturated(1)
+                -- icon.icon:SetDesaturated(1)
+                icon:SetAlpha(.5)
                 -- icon:SetSize(28,28)
             end
 

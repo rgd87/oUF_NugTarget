@@ -1,5 +1,4 @@
-## Interface: 50001
-## Title: oUF_Suupa
+## Interface: 70000
 ## Author: d87
 ## Version: 1
 ## Dependencies: oUF

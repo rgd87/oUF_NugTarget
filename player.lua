@@ -19,66 +19,66 @@ local BuffFunc = function(spellID)
     return select(8,UnitAura("player",GetSpellInfo(spellID),nil,"HELPFUL"))
 end
 
-local function BuffGroup(...)
+local function BuffGroup(ids, r,g,b)
     local buffs = {}
-    for i=1,select("#", ...) do
-        local id = select(i, ...)
+    for _,id in ipairs(ids) do
         buffs[id] = GetSpellInfo(id)
     end
     return function()
         for spellID, spellName in pairs(buffs) do
             local name, _,_, count, _, duration, expirationTime, caster, _,_, aura_spellID = UnitAura("player", spellName, nil, "HELPFUL")
-            if name then return true, caster end
+            if name then return true, caster, r,g,b end
         end
+        return false, nil, r,g,b
     end
 end
 --~ local WarrFunc = function(spellID)
 
     local _, playerClass = UnitClass("player")
     if playerClass == "PRIEST" then
-        rem1.func = BuffGroup(588, 73413) -- Inner Fire, Inner Will
-        rem2.func = BuffGroup(21562) -- Fort
+        -- rem1.func = BuffGroup{588, 73413} -- Inner Fire, Inner Will
+        rem2.func = BuffGroup{21562, 109773} -- Fort, Dark Intent
     end
     if playerClass == "WARLOCK" then
-        rem1.func = BuffGroup(1459, 109773, 61316) -- Arcane Brilliance, Dark Intent, Dalaran Brilliance
+        rem1.func = BuffGroup{1459, 109773, 61316} -- Arcane Brilliance, Dark Intent, Dalaran Brilliance
         -- rem2.buffs = { 0 } -- 25228 is the actual buff 
         -- rem2.func = SoulLink
     end
     if playerClass == "WARRIOR" then
-        local battle = BuffGroup(6673, 19506, 57330) -- battle shout, trueshot, horn of winter
-        local commanding = BuffGroup(469, 6307, 21562) -- commanding, blood pact, pwf
+        local battle = BuffGroup({6673, 19506, 57330}, .7,0,.7) -- battle shout, trueshot, horn of winter
+        local commanding = BuffGroup({469, 6307, 21562, 109773}, 0,.7,0.5) -- commanding, blood pact, pwf, intent
         local GetSpecialization = GetSpecialization
         local GetShapeshiftFormID = GetShapeshiftFormID
         -- Battle Stance - 17
         -- Defensive Stance - 18
         -- Berserker Stance - 19
         rem1.func = function() 
-            local present, caster = battle()
+            local present, caster,r,g,b = battle()
             if present and caster ~= "player" then
                 return commanding()
-            else return present end
+            else return present, caster,r,g,b end
         end
 
-        rem2.func = function()
-            if      GetSpecialization() == 1 then return GetShapeshiftFormID() == 17
-            elseif  GetSpecialization() == 2 then return GetShapeshiftFormID() == 17
-            elseif  GetSpecialization() == 3 then return GetShapeshiftFormID() == 18
-            end
-            return true
-        end
+        -- rem2.func = function()
+            -- if      GetSpecialization() == 1 then return GetShapeshiftFormID() == 17
+            -- elseif  GetSpecialization() == 2 then return GetShapeshiftFormID() == 17
+            -- elseif  GetSpecialization() == 3 then return GetShapeshiftFormID() == 18
+            -- end
+            -- return true
+        -- end
     end
     if playerClass == "DEATHKNIGHT" then
-        rem1.func = BuffGroup(6673, 19506, 57330) -- battle shout, trueshot, horn of winter
+        rem1.func = BuffGroup{6673, 19506, 57330} -- battle shout, trueshot, horn of winter
     end
     if playerClass == "ROGUE" then
-        rem1.func = BuffGroup(2823, 8679)
-        rem2.func = BuffGroup(3408, 5761, 108211, 108215)
+        rem1.func = BuffGroup{2823, 8679}
+        rem2.func = BuffGroup{3408, 5761, 108211, 108215}
     end
 
 
 local mana = {.4, .4, 1}
 local colors = setmetatable({
-    health = { 1, .3, .3}, {__index = oUF.health},
+    health = { 1, .4, .4}, {__index = oUF.health},
 	power = setmetatable({
 		["MANA"] = mana,
 		["RAGE"] = mana,
@@ -161,7 +161,11 @@ local function CreateIndicator(name, parent, opts)
         if self.OnUpdateCounter < TICK_PERIOD then return end
         self.OnUpdateCounter = 0
         
-        local found = self.opts.func()
+        local found, caster, r,g,b = self.opts.func()
+        if b then
+            self.tex:SetVertexColor(r,g,b)
+            self.shinetex:SetVertexColor(r+.3, g+.3, b+.3)
+        end
         if not found then self:Shine() end
     end
     if f.opts.func then
@@ -279,11 +283,99 @@ local SuupaPlayer = function( self, unit)
     hp:SetStatusBarTexture[[Interface\AddOns\oUF_Suupa\player\playerLeftBar.tga]]
     hp:SetStatusBarColor(1, .3, .3)
     hp:SetPoint("CENTER",self,"CENTER",-39,0)
+
+
+    local function GetGradientColor(c1, c2, v)
+        if v > 1 then v = 1 end
+        local r = c1[1] + v*(c2[1]-c1[1])
+        local g = c1[2] + v*(c2[2]-c1[2])
+        local b = c1[3] + v*(c2[3]-c1[3])
+        return r,g,b
+    end
+
+    local c1 = {1,0,0}
+    local c2 = {1,.4,.4}
+
+    hp.SetValueDefault = hp.SetValue
+    hp.SetValue = function(self, v)
+        local max = self.maxvalue - self.minvalue
+        local v2 = v - self.minvalue
+        local vp = v2/max
+        local r,g,b = GetGradientColor(c1,c2,vp)
+        self:SetStatusBarColor(r,g,b)
+        self.bg:SetVertexColor(r*.5,g*.5,b*.5)
+        -- if vp < 0.15 then
+            -- self.glowanim:SetDuration(0.1)
+            -- if not self.glow:IsPlaying() then
+                -- self.glow:Play()
+            -- end
+        if vp < 0.2 then
+            self.glowanim:SetDuration(0.2)
+            if not self.glow:IsPlaying() then
+                self.glow:Play()
+            end
+        elseif vp < 0.35 then
+            self.glowanim:SetDuration(0.4)
+            if not self.glow:IsPlaying() then
+                self.glow:Play()
+            end
+        else
+            if self.glow:IsPlaying() then
+                self.glow:Stop()
+            end
+        end
+        self:SetValueDefault(v)
+    end
+
+    local sag = hp.t:CreateAnimationGroup()
+    sag:SetLooping("BOUNCE")
+    local sa1 = sag:CreateAnimation("Alpha")
+    sa1:SetFromAlpha(1)
+    sa1:SetToAlpha(0.3)
+    sa1:SetDuration(0.3)
+    sa1:SetOrder(1)
+
+    hp.glow = sag
+    hp.glowanim = sa1
+
+
+    -- local hpglow = hp:CreateTexture(nil,"ARTWORK",3)
+    -- hpglow:SetTexture[[Interface\AddOns\oUF_Suupa\player\playerLeftBarGlow.tga]]
+    -- hpglow:SetTexCoord(0,1,0,0.50)
+    -- hpglow:SetWidth(60)
+    -- hpglow:SetHeight(196)
+    -- hpglow:SetVertexColor(1, .3, .3)
+    -- hpglow:SetPoint("CENTER",self,"CENTER",-40,0)
+    -- hpglow:SetAlpha(.7)
+
+    -- local hpglow = CreateVBar(nil,self)
+    -- hpglow:SetCoord(0,1,0,0.50)
+    -- hpglow:SetWidth(60)
+    -- hpglow:SetHeight(196)
+    -- hpglow:SetStatusBarTexture[[Interface\AddOns\oUF_Suupa\player\playerLeftBarGlow.tga]]
+    -- hpglow:SetStatusBarColor(1, .3, .3)
+    -- hpglow:SetPoint("CENTER",self,"CENTER",-40,0)
+    -- hpglow.t:SetDrawLayer("ARTWORK", 3)
+    -- hpglow:SetAlpha(.7)
     
-    
+    -- hp.glow = hpglow
+
+    -- hp.SetValue1 = hp.SetValue
+    -- hp.SetValue = function(self, v)
+    --     self:SetValue1(v)
+    --     self.glow:SetValue(v)
+    -- end
+
+    -- hp.SetMinMaxValues1 = hp.SetMinMaxValues
+    -- hp.SetMinMaxValues = function(self, min, max)
+    --     self:SetMinMaxValues1(min, max)
+    --     self.glow:SetMinMaxValues(min, max)
+    -- end
+
+
 --~     Smooth Regen
-    hp.colorTapping = true
-    hp.colorDisconnected = true
+    -- hp.colorTapping = true
+    -- hp.colorDisconnected = true
     hp.frequentUpdates = true
     
     local hpbg = hp:CreateTexture(nil,"BACKGROUND")
@@ -295,7 +387,7 @@ local SuupaPlayer = function( self, unit)
     hp.bg = hpbg
     hp.bg.multiplier = 0.5
     
-    hp.colorHealth = true
+    -- hp.colorHealth = true
     
     self.Health = hp
     
@@ -330,7 +422,7 @@ local SuupaPlayer = function( self, unit)
     --INDICATORS
     
     local ind1 = CreateIndicator(nil,self, rem1 )
-    ind1:SetPoint("CENTER",self,"CENTER",52,-62)
+    ind1:SetPoint("CENTER",self,"CENTER",51,-62)
 --~     ind1.tex:SetVertexColor(0.7,0,0)*
     self.ind1 = ind1
     
