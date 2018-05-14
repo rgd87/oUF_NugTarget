@@ -288,8 +288,16 @@ end
 local SuupaTarget = function( self, unit)
     local width = 307
     local height = 104
-    self:SetHeight(height)
+    self:SetHeight(height-30)
     self:SetWidth(width)
+
+    local bg = self:CreateTexture(nil,"ARTWORK")
+    -- bg:SetDrawLayer("ARTWORK",7)
+    bg:SetPoint("TOPLEFT")
+    bg:SetWidth(width)
+    bg:SetHeight(height)
+    bg:SetTexture[[Interface\AddOns\oUF_Suupa\target\targetBG]]
+    bg:SetTexCoord(0,1,0,0.67)
 
 	self.menu = menu
 	self.colors = colors
@@ -473,13 +481,6 @@ local SuupaTarget = function( self, unit)
 
     self.Power = mp
 
-
-
-    local bg = self:CreateTexture(nil,"ARTWORK")
-    -- bg:SetDrawLayer("ARTWORK",7)
-    bg:SetAllPoints(self)
-    bg:SetTexture[[Interface\AddOns\oUF_Suupa\target\targetBG]]
-    bg:SetTexCoord(0,1,0,0.67)
     
 
 --~ 	self.OverrideUpdateHealth = OverrideUpdateHealth
