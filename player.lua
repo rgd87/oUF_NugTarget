@@ -1,5 +1,5 @@
 local rem1 = {
-    color = { 0.7,0,0 }, 
+    color = { 0.7,0,0 },
     shinecolor = { 0.9,0.4,0.4 },
 }
 local rem2 = {
@@ -37,27 +37,27 @@ end
     local _, playerClass = UnitClass("player")
     if playerClass == "PRIEST" then
         -- rem1.func = BuffGroup{588, 73413} -- Inner Fire, Inner Will
-        rem2.func = BuffGroup{21562, 109773} -- Fort, Dark Intent
+        -- rem2.func = BuffGroup{21562, 109773} -- Fort, Dark Intent
     end
     if playerClass == "WARLOCK" then
-        rem1.func = BuffGroup{1459, 109773, 61316} -- Arcane Brilliance, Dark Intent, Dalaran Brilliance
-        -- rem2.buffs = { 0 } -- 25228 is the actual buff 
+        -- rem1.func = BuffGroup{1459, 109773, 61316} -- Arcane Brilliance, Dark Intent, Dalaran Brilliance
+        -- rem2.buffs = { 0 } -- 25228 is the actual buff
         -- rem2.func = SoulLink
     end
     if playerClass == "WARRIOR" then
-        local battle = BuffGroup({6673, 19506, 57330}, .7,0,.7) -- battle shout, trueshot, horn of winter
-        local commanding = BuffGroup({469, 6307, 21562, 109773}, 0,.7,0.5) -- commanding, blood pact, pwf, intent
-        local GetSpecialization = GetSpecialization
-        local GetShapeshiftFormID = GetShapeshiftFormID
+        -- local battle = BuffGroup({6673, 19506, 57330}, .7,0,.7) -- battle shout, trueshot, horn of winter
+        -- local commanding = BuffGroup({469, 6307, 21562, 109773}, 0,.7,0.5) -- commanding, blood pact, pwf, intent
+        -- local GetSpecialization = GetSpecialization
+        -- local GetShapeshiftFormID = GetShapeshiftFormID
         -- Battle Stance - 17
         -- Defensive Stance - 18
         -- Berserker Stance - 19
-        rem1.func = function() 
-            local present, caster,r,g,b = battle()
-            if present and caster ~= "player" then
-                return commanding()
-            else return present, caster,r,g,b end
-        end
+        -- rem1.func = function()
+        --     local present, caster,r,g,b = battle()
+        --     if present and caster ~= "player" then
+        --         return commanding()
+        --     else return present, caster,r,g,b end
+        -- end
 
         -- rem2.func = function()
             -- if      GetSpecialization() == 1 then return GetShapeshiftFormID() == 17
@@ -68,11 +68,11 @@ end
         -- end
     end
     if playerClass == "DEATHKNIGHT" then
-        rem1.func = BuffGroup{6673, 19506, 57330} -- battle shout, trueshot, horn of winter
+        -- rem1.func = BuffGroup{6673, 19506, 57330} -- battle shout, trueshot, horn of winter
     end
     if playerClass == "ROGUE" then
-        rem1.func = BuffGroup{2823, 8679}
-        rem2.func = BuffGroup{3408, 5761, 108211, 108215}
+        -- rem1.func = BuffGroup{2823, 8679}
+        -- rem2.func = BuffGroup{3408, 5761, 108211, 108215}
     end
 
 
@@ -85,8 +85,8 @@ local colors = setmetatable({
 		["ENERGY"] = mana,
 	}, {__index = oUF.colors.power}),
 }, {__index = oUF.colors})
-    
-    
+
+
 local menu = function(self)
 	local unit = self.unit:sub(1, -2)
 	local cunit = self.unit:gsub("(.)", string.upper, 1)
@@ -128,18 +128,18 @@ end
 local function CreateIndicator(name, parent, opts)
     local f = CreateFrame("Frame",name,parent)
     local size = 13
-    
+
     f.opts = opts
-    
+
     f:SetHeight(size)
     f:SetWidth(size)
-    
+
     local t = f:CreateTexture(nil,"BACKGROUND")
     t:SetTexture([[Interface\AddOns\oUF_Suupa\indicator\Indicator]])
     t:SetAllPoints(f)
     t:SetVertexColor(unpack(f.opts.color))
     f.tex = t
-    
+
     t = f:CreateTexture(nil,"OVERLAY")
     t:SetTexture([[Interface\AddOns\oUF_Suupa\indicator\Shine]])
     t:SetWidth(size*5)
@@ -148,19 +148,19 @@ local function CreateIndicator(name, parent, opts)
     t:SetVertexColor(unpack(f.opts.shinecolor))
     t:SetAlpha(0)
     f.shinetex = t
-    
+
     f.color = color
     f.color_shine = color_shine
-    
+
     f.Shine = function(self)
         ShineFadeIn(self.shinetex)
     end
-    
+
     f.OnUpdate = function (self, time)
         self.OnUpdateCounter = (self.OnUpdateCounter or 0) + time
         if self.OnUpdateCounter < TICK_PERIOD then return end
         self.OnUpdateCounter = 0
-        
+
         local found, caster, r,g,b = self.opts.func()
         if b then
             self.tex:SetVertexColor(r,g,b)
@@ -171,8 +171,8 @@ local function CreateIndicator(name, parent, opts)
     if f.opts.func then
         f:SetScript("OnUpdate", f.OnUpdate)
     end
-    
-    
+
+
     return f
 end
 
@@ -193,20 +193,20 @@ local function CreateVBar(name, parent)
 --~     tbg:SetTexture(texture)
 --~     tbg:SetTexCoord(0,1, 0, texbtm)
 --~     tbg:SetVertexColor(color[1]/2,color[2]/2,color[3]/2)
-    
+
 --~     bar.bg = tbg
-    
-    
+
+
     local t = f:CreateTexture(nil, "ARTWORK")
 --~     t:SetTexture(texture)
 
-    
+
 --~     t:SetVertexColor(color[1],color[2],color[3])
     t:SetPoint("BOTTOMLEFT", f, "BOTTOMLEFT",0,0)
     t:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT",0,0)
-    
+
     f.t = t
-    
+
     f.SetCoord = function(self, left, right, top, bottom)
         self.left = left
         self.right = right
@@ -223,7 +223,7 @@ local function CreateVBar(name, parent)
     f.SetStatusBarColor = function(self, r,g,b)
         self.t:SetVertexColor(r,g,b)
     end
-    
+
     f.SetMinMaxValues = function(self, min, max)
         if max > min then
             self.minvalue = min
@@ -233,10 +233,10 @@ local function CreateVBar(name, parent)
             self.maxvalue = 1
         end
     end
-    
+
     f.SetValue = function(self, val)
         if not val then return end
-        
+
         local pos = (val-self.minvalue)/(self.maxvalue-self.minvalue)
         if pos == 0 then pos = 0.001 end
         local h = self:GetHeight()*pos
@@ -247,10 +247,10 @@ local function CreateVBar(name, parent)
 --~         print(string.format("coords: %s %s %s %s",self.left,self.right, self.bottom - (self.bottom-self.top)*pos , self.bottom))
         self.t:SetTexCoord(self.left,self.right, self.bottom - (self.bottom-self.top)*pos , self.bottom)
     end
-    
+
 --~     f:SetValue(100)
     f:Show()
-    
+
     return f
 end
 
@@ -268,14 +268,14 @@ local SuupaPlayer = function( self, unit)
 
 	self:RegisterForClicks"anyup"
 	self:SetAttribute("*type2", "menu")
-    
-    
+
+
     self.colors = colors
-    
+
     local bg = self:CreateTexture(nil,"BACKGROUND")
     bg:SetAllPoints(self)
     bg:SetTexture[[Interface\AddOns\oUF_Suupa\player\playerBG.tga]]
-    
+
 	local hp = CreateVBar(nil,self)
     hp:SetCoord(0,1,0,0.58)
     hp:SetWidth(38)
@@ -357,7 +357,7 @@ local SuupaPlayer = function( self, unit)
     -- hpglow:SetPoint("CENTER",self,"CENTER",-40,0)
     -- hpglow.t:SetDrawLayer("ARTWORK", 3)
     -- hpglow:SetAlpha(.7)
-    
+
     -- hp.glow = hpglow
 
     -- hp.SetValue1 = hp.SetValue
@@ -377,60 +377,60 @@ local SuupaPlayer = function( self, unit)
     -- hp.colorTapping = true
     -- hp.colorDisconnected = true
     hp.frequentUpdates = true
-    
+
     local hpbg = hp:CreateTexture(nil,"BACKGROUND")
     hpbg:SetAllPoints(hp)
     hpbg:SetTexture[[Interface\AddOns\oUF_Suupa\player\playerLeftBar.tga]]
     hpbg:SetTexCoord(0,1,0,0.58)
 --~     hpbg:SetVertexColor(0.5,.15,.15)
-    
+
     hp.bg = hpbg
     hp.bg.multiplier = 0.5
-    
+
     -- hp.colorHealth = true
-    
+
     self.Health = hp
-    
+
 	--==< POWER BAR >==--
     local mb = CreateVBar(nil,self)
     mb:SetCoord(0,1,0,0.58)
     mb:SetWidth(38)
     mb:SetHeight(180)
-    
+
     mb:SetStatusBarTexture[[Interface\AddOns\oUF_Suupa\player\playerRightBar.tga]]
     mb:SetStatusBarColor(.4, .4, 1)
     mb:SetPoint("CENTER",self,"CENTER",-1,-1)
-    
+
     local mbbg = mb:CreateTexture(nil,"BACKGROUND")
     mbbg:SetAllPoints(mb)
     mbbg:SetTexture[[Interface\AddOns\oUF_Suupa\player\playerRightBar.tga]]
     mbbg:SetTexCoord(0,1,0,0.58)
-    
+
     mb.bg = mbbg
     mb.bg.multiplier = 0.5
-    
+
     mb.colorPower = true
     mb.colorDisconnected = true
     mb.colorTapping = true
     mb.frequentUpdates = true
 
     self.Power = mb
-    
-    
-    
-    
+
+
+
+
     --INDICATORS
-    
+
     local ind1 = CreateIndicator(nil,self, rem1 )
     ind1:SetPoint("CENTER",self,"CENTER",51,-62)
 --~     ind1.tex:SetVertexColor(0.7,0,0)*
     self.ind1 = ind1
-    
+
     local ind2 = CreateIndicator(nil,self, rem2 )
     ind2:SetPoint("CENTER",self,"CENTER",41,-84)
 --~     ind2.tex:SetVertexColor
     self.ind2 = ind2
-    
+
 end
 
 local func2 = function (self, unit)
@@ -443,40 +443,40 @@ local func2 = function (self, unit)
             bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", tile = true, tileSize = 0,
             insets = {left = -2-cbh-2, right = -2, top = -2, bottom = -2},
         }
-        
+
 --~         CAST BAR
         local cb = CreateFrame"StatusBar"
         cb:SetWidth(cbw - cbh -2 )
         cb:SetHeight(cbh)
         cb:SetStatusBarTexture([[Interface\AddOns\oUF_Suupa\statusbar]])
         cb:SetStatusBarColor(0.8,0,0)
-        
+
 --~         CASTBAR BG
         local cbbg = cb:CreateTexture(nil, "BORDER")
         cbbg:SetAllPoints(cb)
         cbbg:SetTexture([[Interface\AddOns\oUF_Suupa\statusbar]])
         cb.bg = cbbg
-        
+
         cb:SetParent(self)
         if unit == "player" then
             cb:SetPoint("BOTTOMRIGHT",UIParent,"BOTTOM", -10, 140)
         elseif unit == "target" then
             cb:SetPoint("CENTER",UIParent,"TOPLEFT", -300, 100)
         end
-        
+
 --~         SAFE ZONE
         local lag = cb:CreateTexture(nil, "OVERLAY")
         lag:SetAlpha(0.3)
         lag:SetVertexColor(0,0,0)
         cb.SafeZone = lag
-        
+
 --~         SPARK
         local sp = cb:CreateTexture(nil,"OVERLAY")
         sp:SetBlendMode("ADD")
         sp:SetHeight(cbh*3)
         sp:SetAlpha(0.8)
         cb.Spark = sp
-        
+
 --~         SPELL ICON
         local ic = cb:CreateTexture(nil,"ARTWORK")
         ic:SetHeight(cbh)
@@ -484,61 +484,35 @@ local func2 = function (self, unit)
         ic:SetTexCoord(.07, .93, .07, .93)
         ic:SetPoint("RIGHT",cb,"LEFT",-2,0)
         cb.Icon = ic
-        
+
         cb:SetBackdrop(cbbackdrop)
         cb:SetBackdropColor(0, 0, 0, 0.7)
         cb:SetBackdropBorderColor(.3, .3, .3, 1)
-    
+
         self.Castbar = cb
 --~         COLORING
-        self.PostCastStart = function(self, event, unit, spellname, spellrank)  
+        self.PostCastStart = function(self, event, unit, spellname, spellrank)
             local color = { 0.8,0,0 }
             local multiplier = 0.3
             self.Castbar:SetStatusBarColor(unpack(color))
             self.Castbar.bg:SetVertexColor(color[1]*multiplier,color[2]*multiplier,color[3]*multiplier)
         end
-        self.PostChannelStart = function(self, event, unit, spellname, spellrank)  
+        self.PostChannelStart = function(self, event, unit, spellname, spellrank)
             local color = { 0.4, 0.8, 0.3 }
             local multiplier = 0.3
             self.Castbar:SetStatusBarColor(unpack(color))
             self.Castbar.bg:SetVertexColor(color[1]*multiplier,color[2]*multiplier,color[3]*multiplier)
         end
-        
+
     end
 end
 
---~ oUF:RegisterStyle("NugaPlayerCast", func2)
---~ oUF:SetActiveStyle"NugaPlayerCast"
+-- oUF:RegisterStyle("SuupaPlayer", SuupaPlayer)
+-- oUF:SetActiveStyle"SuupaPlayer"
 
---~ local playercast = oUF:Spawn("player","oUF_Player")
---~ playercast:SetPoint("CENTER", -90, -310)
+-- local player = oUF:Spawn("player","oUF_Player")
+-- player:SetScale(0.85)
+-- player:SetFrameLevel(8)
+-- player:SetPoint("LEFT","ActionButton12","RIGHT",3)
+-- player:SetPoint("BOTTOM",UIParent,"BOTTOM",0,-3)
 
-oUF:RegisterStyle("SuupaPlayer", SuupaPlayer)
-oUF:SetActiveStyle"SuupaPlayer"
-
-local player = oUF:Spawn("player","oUF_Player")
-player:SetScale(0.85)
-player:SetFrameLevel(8)
-player:SetPoint("LEFT","ActionButton12","RIGHT",3)
-player:SetPoint("BOTTOM",UIParent,"BOTTOM",0,-3)
-
-
---~ local pet = oUF:Spawn("pet","oUF_Pet")
---~ pet:SetPoint('BOTTOMRIGHT', player, 'TOPRIGHT', 0, 4)
---~ target:SetPoint("CENTER", 220, 0)
---~ target:SetPoint("CENTER", 220, -210)
-
-
-
---~ local party = oUF:Spawn("header", "oUF_Party")
---~ party:SetPoint("TOPLEFT", 30, -30)
---~ party:SetManyAttributes(
---~ 	"showParty", true,
---~ 	"yOffset", -40,
---~ 	"xOffset", -40,
---~ 	'maxColumns', 2,
---~ 	'unitsPerColumn', 2,
---~ 	'columnAnchorPoint', 'LEFT',
---~ 	'columnSpacing', 15
---~ )
---~ party:Show()
