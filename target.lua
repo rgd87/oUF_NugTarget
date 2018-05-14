@@ -90,21 +90,27 @@ local PostUpdateHealth = function(self, unit, cur, max)
     if (health.colorTapping and not UnitPlayerControlled(unit) and
         UnitIsTapDenied(unit) ) then
         t = self.colors.tapped
+        health.model:SetAlpha(0)
     elseif(health.colorDisconnected and not UnitIsConnected(unit)) then
         t = self.colors.disconnected
-    elseif(health.colorClass and UnitIsPlayer(unit)) or
-        (health.colorClassNPC and not UnitIsPlayer(unit)) or
-        (health.colorClassPet and UnitPlayerControlled(unit) and not UnitIsPlayer(unit)) then
-        local _, class = UnitClass(unit)
-        t = self.colors.class[class]
-    elseif(health.colorReaction and UnitReaction(unit, 'player')) then
-        t = self.colors.reaction[UnitReaction(unit, "player")]
-    elseif(health.colorSmooth) then
-        r, g, b = self.ColorGradient(min, max, unpack(health.smoothGradient or self.colors.smooth))
+        health.model:SetAlpha(0)
+    -- elseif(health.colorClass and UnitIsPlayer(unit)) or
+    --     (health.colorClassNPC and not UnitIsPlayer(unit)) or
+    --     (health.colorClassPet and UnitPlayerControlled(unit) and not UnitIsPlayer(unit)) then
+    --     local _, class = UnitClass(unit)
+    --     t = self.colors.class[class]
+    --     health.model:SetAlpha(1)
+    -- elseif(health.colorReaction and UnitReaction(unit, 'player')) then
+    --     t = self.colors.reaction[UnitReaction(unit, "player")]
+    --     health.model:SetAlpha(1)
+    -- elseif(health.colorSmooth) then
+    --     r, g, b = self.ColorGradient(min, max, unpack(health.smoothGradient or self.colors.smooth))
     elseif execute_range and cur/max < execute_range then
         t = self.colors.execute
+        health.model:SetAlpha(1)
     elseif(health.colorHealth) then
         t = self.colors.health
+        health.model:SetAlpha(1)
     end
 
     if(t) then
@@ -685,7 +691,9 @@ local SuupaTOT = function( self, unit)
     hp.bg = hp:CreateTexture(nil, "BORDER")
     hp.bg:SetAllPoints(hp)
     hp.bg:SetTexture(texture)
-    hp.bg.multiplier = 0.4    
+    hp.bg.multiplier = 0.4
+
+    hp.model = CreateFrame("Frame")
     
     self.Health = hp
     self.Health.PostUpdate = PostUpdateHealth
