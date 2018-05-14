@@ -624,14 +624,14 @@ local SuupaTarget = function( self, unit)
     self.Leader = leader
     
     --==< RAID ICON >==--
-    if unit == "target" then
+    -- if unit == "target" then
         local raidicon = self.Portrait:CreateTexture(nil, "OVERLAY")
         raidicon:SetHeight(20)
         raidicon:SetWidth(20)
-        raidicon:SetTexture("Interface\\TargetingFrame\\UI-RaidTargetingIcons")
+        -- raidicon:SetTexture("Interface\\TargetingFrame\\UI-RaidTargetingIcons")
         raidicon:SetPoint("TOPRIGHT",self.Portrait, "TOPRIGHT",0,0)
         self.RaidIcon = raidicon
-    end
+    -- end
     
     
     self:EnableMouse(true)
