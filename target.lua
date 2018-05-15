@@ -291,13 +291,6 @@ local SuupaTarget = function( self, unit)
     self:SetHeight(height-30)
     self:SetWidth(width)
 
-    local bg = self:CreateTexture(nil,"ARTWORK")
-    -- bg:SetDrawLayer("ARTWORK",7)
-    bg:SetPoint("TOPLEFT")
-    bg:SetWidth(width)
-    bg:SetHeight(height)
-    bg:SetTexture[[Interface\AddOns\oUF_Suupa\target\targetBG]]
-    bg:SetTexCoord(0,1,0,0.67)
 
 	self.menu = menu
 	self.colors = colors
@@ -417,7 +410,13 @@ local SuupaTarget = function( self, unit)
     local OriginalSetValue = hp.SetValue
     hp.SetValue = function(self, v)
         local min, max = self:GetMinMaxValues()
-        local p = (v-min)/(max-min)
+        local total = max-min
+        local p
+        if total == 0 then
+            p = 0
+        else
+            p = (v-min)/(max-min)
+        end
         local len = p*self:GetWidth()
         self.spark:SetPoint("CENTER", self, "LEFT", len, 0)
         self.model:SetValue(v)
@@ -472,7 +471,13 @@ local SuupaTarget = function( self, unit)
     local OriginalSetValue = mp.SetValue
     mp.SetValue = function(self, v)
         local min, max = self:GetMinMaxValues()
-        local p = (v-min)/(max-min)
+        local total = max-min
+        local p
+        if total == 0 then
+            p = 0
+        else
+            p = (v-min)/(max-min)
+        end
         local len = p*self:GetWidth()
         self.spark:SetPoint("CENTER", self, "LEFT", len, 0)
         return OriginalSetValue(self, v)
@@ -488,6 +493,12 @@ local SuupaTarget = function( self, unit)
     self.Power = mp
 
     
+    local bg = hp:CreateTexture(nil,"ARTWORK", nil, 7)
+    bg:SetPoint("TOPLEFT", self, "TOPLEFT",0,0)
+    bg:SetWidth(307)
+    bg:SetHeight(104)
+    bg:SetTexture[[Interface\AddOns\oUF_Suupa\target\targetBG]]
+    bg:SetTexCoord(0,1,0,0.67)
 
 --~ 	self.OverrideUpdateHealth = OverrideUpdateHealth
 
