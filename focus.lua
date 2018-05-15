@@ -1,4 +1,4 @@
-local texture = [[Interface\AddOns\oUF_Suupa\statusbar]]
+local texture = [[Interface\AddOns\oUF_NugTarget\statusbar]]
 
 local mana = {.4, .4, 1}
 local colors = setmetatable({
@@ -139,7 +139,7 @@ end
 -- local focus = oUF:Spawn("focus","oUF_Focus")
 -- focus:SetPoint("LEFT",UIParent,"LEFT", 165,2)
 
---~ oUF:RegisterStyle("FocusCast", oUF_Suupa_CastBar)
+--~ oUF:RegisterStyle("FocusCast", oUF_NugTarget_CastBar)
 --~ oUF:SetActiveStyle"FocusCast"
 --~ local focuscast = oUF:Spawn("focus","ouf_focus_cast")
 --~ focuscast:SetWidth(focus:GetWidth())

@@ -1,4 +1,4 @@
-local texture = [[Interface\AddOns\oUF_Suupa\vsb_pet]]
+local texture = [[Interface\AddOns\oUF_NugTarget\vsb_pet]]
 
 local mana = {.4, .4, 1}
 local colors = setmetatable({

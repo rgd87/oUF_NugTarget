@@ -1,8 +1,8 @@
-local font1 = [[Interface\AddOns\oUF_Suupa\fonts\iFlash 706.TTF]]
+local font1 = [[Interface\AddOns\oUF_NugTarget\fonts\iFlash 706.TTF]]
 local font1size = 8
---~ local font2 = [[Interface\AddOns\oUF_Suupa\fonts\Unvers.TTF]]
---~ local font2 = [[Interface\AddOns\oUF_Suupa\fonts\iFlash 706.TTF]]
-local font2 = [[Interface\AddOns\oUF_Suupa\fonts\ClearFontBold.ttf]]
+--~ local font2 = [[Interface\AddOns\oUF_NugTarget\fonts\Unvers.TTF]]
+--~ local font2 = [[Interface\AddOns\oUF_NugTarget\fonts\iFlash 706.TTF]]
+local font2 = [[Interface\AddOns\oUF_NugTarget\fonts\ClearFontBold.ttf]]
 local font2size = 13
 
 oUF.Tags.Events["shorthp"] = "UNIT_HEALTH"
@@ -237,7 +237,7 @@ end
 local function CreateThreatBar(parent)
     local f = CreateFrame("StatusBar", "$parent_ThreatBar", parent)
     local width, height= 3, 20
-    local tex = [[Interface\AddOns\oUF_Suupa\vstatusbar]]
+    local tex = [[Interface\AddOns\oUF_NugTarget\vstatusbar]]
     f:SetOrientation("VERTICAL")
     f:SetWidth(width)
     f:SetHeight(height)
@@ -332,7 +332,7 @@ local SuupaTarget = function( self, unit)
 
     local portbg = port:CreateTexture(nil, "BACKGROUND")
     -- portbg:SetVertexColor(0,0,0)
-    portbg:SetTexture[[Interface\AddOns\oUF_Suupa\target\portBG.tga]]
+    portbg:SetTexture[[Interface\AddOns\oUF_NugTarget\target\portBG.tga]]
     portbg:SetAllPoints(port)
     
     self.Portrait = port
@@ -345,7 +345,7 @@ local SuupaTarget = function( self, unit)
 
     -- local texture = [[Interface\AddOns\NugRunning\statusbar.tga]]
     -- local texture = [[Interface\TargetingFrame\UI-StatusBar]]
-    local texture = [[Interface\AddOns\oUF_Suupa\statusbar1.tga]]
+    local texture = [[Interface\AddOns\oUF_NugTarget\statusbar1.tga]]
 
     local hp = CreateFrame("StatusBar",nil,self)
     hp:SetFrameStrata("LOW")
@@ -390,6 +390,7 @@ local SuupaTarget = function( self, unit)
     sf:SetPoint("LEFT", hp, "LEFT",0,0)
 
     local ambientSmoke = MakeModelRegion(sf, hp:GetWidth(), hp:GetHeight(), "spells/acidburn_red.m2", -20, 0, -4.6 )
+    -- local ambientSmoke = MakeModelRegion(sf, hp:GetWidth(), hp:GetHeight(), "spells/7fx_ghost_red_state.m2",  3,0,1.2 )
     -- ambientSmoke:SetAlpha(0.7)
     ambientSmoke:SetAllPoints(sf)
 
@@ -400,7 +401,7 @@ local SuupaTarget = function( self, unit)
 
     local spark = hp:CreateTexture(nil, "ARTWORK", nil, 4)
     spark:SetBlendMode("ADD")
-    spark:SetTexture([[Interface\AddOns\oUF_Suupa\vialSparkH.tga]])
+    spark:SetTexture([[Interface\AddOns\oUF_NugTarget\vialSparkH.tga]])
     spark:SetSize(sparkWidth, height)
 
     spark:SetPoint("CENTER", f, "TOP",0,0)
@@ -461,7 +462,7 @@ local SuupaTarget = function( self, unit)
 
     local spark = mp:CreateTexture(nil, "ARTWORK", nil, 4)
     spark:SetBlendMode("ADD")
-    spark:SetTexture([[Interface\AddOns\oUF_Suupa\vialSparkH.tga]])
+    spark:SetTexture([[Interface\AddOns\oUF_NugTarget\vialSparkH.tga]])
     spark:SetSize(sparkWidth, 9)
 
     spark:SetPoint("CENTER", f, "TOP",0,0)
@@ -497,7 +498,7 @@ local SuupaTarget = function( self, unit)
     bg:SetPoint("TOPLEFT", self, "TOPLEFT",0,0)
     bg:SetWidth(307)
     bg:SetHeight(104)
-    bg:SetTexture[[Interface\AddOns\oUF_Suupa\target\targetBG]]
+    bg:SetTexture[[Interface\AddOns\oUF_NugTarget\target\targetBG]]
     bg:SetTexCoord(0,1,0,0.67)
 
 --~ 	self.OverrideUpdateHealth = OverrideUpdateHealth
@@ -572,7 +573,7 @@ local SuupaTarget = function( self, unit)
             --     overlay:SetPoint("CENTER",0,0)
             -- end
             -- button.overlay = overlay
-            overlay:SetTexture([[Interface\AddOns\oUF_Suupa\buffBorder]])
+            overlay:SetTexture([[Interface\AddOns\oUF_NugTarget\buffBorder]])
             if not button.isDebuff then
                 overlay:Show()
                 overlay:SetVertexColor(0.6,0.6,0.6, 1)
@@ -689,7 +690,7 @@ local SuupaTOT = function( self, unit)
     local height = 15
 
     -- local texture = [[Interface\TargetingFrame\UI-StatusBar]]
-    local texture = [[Interface\AddOns\oUF_Suupa\statusbar1.tga]]
+    local texture = [[Interface\AddOns\oUF_NugTarget\statusbar1.tga]]
 
     local hp = CreateFrame("StatusBar",nil,self)
     -- hp:SetFrameStrata("LOW")
@@ -719,7 +720,7 @@ local SuupaTOT = function( self, unit)
     local bg = hp:CreateTexture(nil,"ARTWORK")
     bg:SetDrawLayer("ARTWORK", 7)
     bg:SetAllPoints(self)
-    bg:SetTexture[[Interface\AddOns\oUF_Suupa\target\totBG]]
+    bg:SetTexture[[Interface\AddOns\oUF_NugTarget\target\totBG]]
     bg:SetTexCoord(0,1,0,88/128)
     
      --==< NAME TEXT >==--

@@ -135,13 +135,13 @@ local function CreateIndicator(name, parent, opts)
     f:SetWidth(size)
 
     local t = f:CreateTexture(nil,"BACKGROUND")
-    t:SetTexture([[Interface\AddOns\oUF_Suupa\indicator\Indicator]])
+    t:SetTexture([[Interface\AddOns\oUF_NugTarget\indicator\Indicator]])
     t:SetAllPoints(f)
     t:SetVertexColor(unpack(f.opts.color))
     f.tex = t
 
     t = f:CreateTexture(nil,"OVERLAY")
-    t:SetTexture([[Interface\AddOns\oUF_Suupa\indicator\Shine]])
+    t:SetTexture([[Interface\AddOns\oUF_NugTarget\indicator\Shine]])
     t:SetWidth(size*5)
     t:SetHeight(size*5)
     t:SetPoint("CENTER",f,"CENTER",0,0)
@@ -274,13 +274,13 @@ local SuupaPlayer = function( self, unit)
 
     local bg = self:CreateTexture(nil,"BACKGROUND")
     bg:SetAllPoints(self)
-    bg:SetTexture[[Interface\AddOns\oUF_Suupa\player\playerBG.tga]]
+    bg:SetTexture[[Interface\AddOns\oUF_NugTarget\player\playerBG.tga]]
 
 	local hp = CreateVBar(nil,self)
     hp:SetCoord(0,1,0,0.58)
     hp:SetWidth(38)
     hp:SetHeight(180)
-    hp:SetStatusBarTexture[[Interface\AddOns\oUF_Suupa\player\playerLeftBar.tga]]
+    hp:SetStatusBarTexture[[Interface\AddOns\oUF_NugTarget\player\playerLeftBar.tga]]
     hp:SetStatusBarColor(1, .3, .3)
     hp:SetPoint("CENTER",self,"CENTER",-39,0)
 
@@ -340,7 +340,7 @@ local SuupaPlayer = function( self, unit)
 
 
     -- local hpglow = hp:CreateTexture(nil,"ARTWORK",3)
-    -- hpglow:SetTexture[[Interface\AddOns\oUF_Suupa\player\playerLeftBarGlow.tga]]
+    -- hpglow:SetTexture[[Interface\AddOns\oUF_NugTarget\player\playerLeftBarGlow.tga]]
     -- hpglow:SetTexCoord(0,1,0,0.50)
     -- hpglow:SetWidth(60)
     -- hpglow:SetHeight(196)
@@ -352,7 +352,7 @@ local SuupaPlayer = function( self, unit)
     -- hpglow:SetCoord(0,1,0,0.50)
     -- hpglow:SetWidth(60)
     -- hpglow:SetHeight(196)
-    -- hpglow:SetStatusBarTexture[[Interface\AddOns\oUF_Suupa\player\playerLeftBarGlow.tga]]
+    -- hpglow:SetStatusBarTexture[[Interface\AddOns\oUF_NugTarget\player\playerLeftBarGlow.tga]]
     -- hpglow:SetStatusBarColor(1, .3, .3)
     -- hpglow:SetPoint("CENTER",self,"CENTER",-40,0)
     -- hpglow.t:SetDrawLayer("ARTWORK", 3)
@@ -380,7 +380,7 @@ local SuupaPlayer = function( self, unit)
 
     local hpbg = hp:CreateTexture(nil,"BACKGROUND")
     hpbg:SetAllPoints(hp)
-    hpbg:SetTexture[[Interface\AddOns\oUF_Suupa\player\playerLeftBar.tga]]
+    hpbg:SetTexture[[Interface\AddOns\oUF_NugTarget\player\playerLeftBar.tga]]
     hpbg:SetTexCoord(0,1,0,0.58)
 --~     hpbg:SetVertexColor(0.5,.15,.15)
 
@@ -397,13 +397,13 @@ local SuupaPlayer = function( self, unit)
     mb:SetWidth(38)
     mb:SetHeight(180)
 
-    mb:SetStatusBarTexture[[Interface\AddOns\oUF_Suupa\player\playerRightBar.tga]]
+    mb:SetStatusBarTexture[[Interface\AddOns\oUF_NugTarget\player\playerRightBar.tga]]
     mb:SetStatusBarColor(.4, .4, 1)
     mb:SetPoint("CENTER",self,"CENTER",-1,-1)
 
     local mbbg = mb:CreateTexture(nil,"BACKGROUND")
     mbbg:SetAllPoints(mb)
-    mbbg:SetTexture[[Interface\AddOns\oUF_Suupa\player\playerRightBar.tga]]
+    mbbg:SetTexture[[Interface\AddOns\oUF_NugTarget\player\playerRightBar.tga]]
     mbbg:SetTexCoord(0,1,0,0.58)
 
     mb.bg = mbbg
@@ -448,13 +448,13 @@ local func2 = function (self, unit)
         local cb = CreateFrame"StatusBar"
         cb:SetWidth(cbw - cbh -2 )
         cb:SetHeight(cbh)
-        cb:SetStatusBarTexture([[Interface\AddOns\oUF_Suupa\statusbar]])
+        cb:SetStatusBarTexture([[Interface\AddOns\oUF_NugTarget\statusbar]])
         cb:SetStatusBarColor(0.8,0,0)
 
 --~         CASTBAR BG
         local cbbg = cb:CreateTexture(nil, "BORDER")
         cbbg:SetAllPoints(cb)
-        cbbg:SetTexture([[Interface\AddOns\oUF_Suupa\statusbar]])
+        cbbg:SetTexture([[Interface\AddOns\oUF_NugTarget\statusbar]])
         cb.bg = cbbg
 
         cb:SetParent(self)
