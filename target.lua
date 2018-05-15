@@ -330,11 +330,17 @@ local SuupaTarget = function( self, unit)
     
 
     local port = CreateFrame("PlayerModel",nil,self)
-    local portsize = 60
+    local portsize = 64
     port.type = "3D"
     port:SetWidth(portsize)
     port:SetHeight(portsize)
-    port:SetPoint("TOPRIGHT",self,"TOPRIGHT",-27,-23)
+    port:SetFrameStrata("LOW")
+    port:SetPoint("TOPRIGHT",self,"TOPRIGHT",-25,-20)
+
+    local portbg = port:CreateTexture(nil, "BACKGROUND")
+    -- portbg:SetVertexColor(0,0,0)
+    portbg:SetTexture[[Interface\AddOns\oUF_Suupa\target\portBG.tga]]
+    portbg:SetAllPoints(port)
     
     self.Portrait = port
     
@@ -488,21 +494,20 @@ local SuupaTarget = function( self, unit)
 
 
     --==< HEALTH BAR TEXT >==--
-    local hpp = port:CreateFontString(nil, "OVERLAY", self.Portrait)
+    local hpp = self:CreateFontString(nil, "OVERLAY", self)
     hpp:SetFont(font1,font1size,"OUTLINE")
     hpp:SetJustifyH"LEFT"
     hpp:SetTextColor(0, 1, 0)
-    hpp:SetPoint("TOPLEFT", self.Portrait, "TOPLEFT", 0, 1)
+    hpp:SetPoint("TOPLEFT", self.Portrait, "TOPLEFT", 1, -3)
     self:Tag(hpp, '[shorthp]')
-    -- hpp:Hide()
 
     self.hpp = hpp
     
-    local hppp = port:CreateFontString(nil, "OVERLAY", self.Portrait)
+    local hppp = self:CreateFontString(nil, "OVERLAY", self)
     hppp:SetFont(font1,font1size,"OUTLINE")
     hppp:SetJustifyH"LEFT"
     hppp:SetTextColor(0, 1, 0)
-    hppp:SetPoint("BOTTOMLEFT", self.Portrait, "BOTTOMLEFT", 0, 0)
+    hppp:SetPoint("BOTTOMLEFT", self.Portrait, "BOTTOMLEFT", 1, 1)
     self:Tag(hppp, '[perhp]')
 
     self.hppp = hppp
@@ -579,9 +584,9 @@ local SuupaTarget = function( self, unit)
 
 		-- Debuffs
 		local debuffs = CreateFrame("Frame", "oUF_Nuga_Debuffs", self)
-		debuffs:SetPoint("TOPRIGHT", self, "BOTTOMRIGHT",-27,5)
+		debuffs:SetPoint("TOPLEFT", self, "BOTTOMLEFT",45,-1)
 		debuffs:SetHeight(1)
-		debuffs:SetWidth(width-120)
+		debuffs:SetWidth(150)
         debuffs.num = 16
         debuffs.PostCreateIcon = PostCreate
 
@@ -616,7 +621,7 @@ local SuupaTarget = function( self, unit)
 	end
     
     --==< LEADER ICON >==--
-    local leader = self.Portrait:CreateFontString(nil, "OVERLAY", self.Portrait)
+    local leader = self:CreateFontString(nil, "OVERLAY", self)
     leader:SetFont(font1,font1size+1,"OUTLINE")
     leader:SetJustifyH"LEFT"
     leader:SetTextColor(0, 1, 0)
@@ -626,7 +631,7 @@ local SuupaTarget = function( self, unit)
     
     --==< RAID ICON >==--
     -- if unit == "target" then
-        local raidicon = self.Portrait:CreateTexture(nil, "OVERLAY")
+        local raidicon = self:CreateTexture(nil, "OVERLAY")
         raidicon:SetHeight(20)
         raidicon:SetWidth(20)
         -- raidicon:SetTexture("Interface\\TargetingFrame\\UI-RaidTargetingIcons")

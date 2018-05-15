@@ -134,10 +134,10 @@ function oUF_supa_lousy_FOCUS(self, unit)
 end
 
 
-oUF:RegisterStyle("supafocus", oUF_supa_lousy_FOCUS)
-oUF:SetActiveStyle"supafocus"
-local focus = oUF:Spawn("focus","oUF_Focus")
-focus:SetPoint("LEFT",UIParent,"LEFT", 165,2)
+-- oUF:RegisterStyle("supafocus", oUF_supa_lousy_FOCUS)
+-- oUF:SetActiveStyle"supafocus"
+-- local focus = oUF:Spawn("focus","oUF_Focus")
+-- focus:SetPoint("LEFT",UIParent,"LEFT", 165,2)
 
 --~ oUF:RegisterStyle("FocusCast", oUF_Suupa_CastBar)
 --~ oUF:SetActiveStyle"FocusCast"
