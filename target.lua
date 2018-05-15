@@ -398,7 +398,7 @@ local SuupaTarget = function( self, unit)
     hp.model = sf
 
 
-    local spark = hp:CreateTexture(nil, "OVERLAY", 7)
+    local spark = hp:CreateTexture(nil, "ARTWORK", nil, 4)
     spark:SetBlendMode("ADD")
     spark:SetTexture([[Interface\AddOns\oUF_Suupa\vialSparkH.tga]])
     spark:SetSize(sparkWidth, height)
@@ -459,7 +459,7 @@ local SuupaTarget = function( self, unit)
     mp.bg.multiplier = 0.3
 
 
-    local spark = mp:CreateTexture(nil, "OVERLAY", 7)
+    local spark = mp:CreateTexture(nil, "ARTWORK", nil, 4)
     spark:SetBlendMode("ADD")
     spark:SetTexture([[Interface\AddOns\oUF_Suupa\vialSparkH.tga]])
     spark:SetSize(sparkWidth, 9)
