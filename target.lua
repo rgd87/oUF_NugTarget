@@ -1,3 +1,5 @@
+local addonName, addon = ...
+
 local font1 = [[Interface\AddOns\oUF_NugTarget\fonts\iFlash 706.TTF]]
 local font1size = 8
 --~ local font2 = [[Interface\AddOns\oUF_NugTarget\fonts\Unvers.TTF]]
@@ -43,6 +45,8 @@ local colors = setmetatable({
 	}, {__index = oUF.colors.power}),
 }, {__index = oUF.colors})
 
+addon.colors = colors
+
 
 local menu = function(self)
 	local unit = self.unit:sub(1, -2)
@@ -54,6 +58,8 @@ local menu = function(self)
 		ToggleDropDownMenu(1, nil, _G[cunit.."FrameDropDown"], "cursor", 0, 0)
 	end
 end
+
+addon.menu = menu
 
 
 local execute_range
@@ -711,10 +717,10 @@ local SuupaTOT = function( self, unit)
     hp.bg:SetTexture(texture)
     hp.bg.multiplier = 0.4
 
-    hp.model = CreateFrame("Frame")
+    -- hp.model = CreateFrame("Frame")
     
     self.Health = hp
-    self.Health.PostUpdate = PostUpdateHealth
+    -- self.Health.PostUpdate = PostUpdateHealth
     
     
     local bg = hp:CreateTexture(nil,"ARTWORK")
