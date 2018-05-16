@@ -726,12 +726,13 @@ local SuupaTOT = function( self, unit)
      --==< NAME TEXT >==--
     local name = hp:CreateFontString(nil, "OVERLAY", self.Health)
     name:SetFont(font2,font2size-2)
+    name:SetNonSpaceWrap(false)
     name:SetJustifyH"LEFT"
     name:SetTextColor(1,1,1, 0.35)
     self:Tag(name, '[name]')
     
-    name:SetPoint("LEFT",self.Health,"LEFT",10,0)
-    name:SetPoint("RIGHT",self.Health,"RIGHT",-7,0)
+    name:SetPoint("TOPLEFT",self.Health,"TOPLEFT",7,0)
+    name:SetPoint("BOTTOMRIGHT",self.Health,"BOTTOMRIGHT",-5,0)
     
     self.Name = name
 
