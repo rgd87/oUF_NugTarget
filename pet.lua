@@ -14,7 +14,7 @@ function ns.oUF_NugGenericSmallFrame(self, unit)
 	self:SetScript("OnEnter", UnitFrame_OnEnter)
 	self:SetScript("OnLeave", UnitFrame_OnLeave)
 
-	-- self:RegisterForClicks"anyup"
+	self:RegisterForClicks"anyup"
 	-- self:SetAttribute("*type2", nil) -- disable right click
     
     self.colors = colors
