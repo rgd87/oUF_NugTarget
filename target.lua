@@ -1,4 +1,4 @@
-local addonName, addon = ...
+local addonName, ns = ...
 
 local font1 = [[Interface\AddOns\oUF_NugTarget\fonts\iFlash 706.TTF]]
 local font1size = 8
@@ -45,45 +45,15 @@ local colors = setmetatable({
 	}, {__index = oUF.colors.power}),
 }, {__index = oUF.colors})
 
-addon.colors = colors
+ns.colors = colors
 
-
-local menu = function(self)
-	local unit = self.unit:sub(1, -2)
-	local cunit = self.unit:gsub("(.)", string.upper, 1)
-
-	if(unit == "party" or unit == "partypet") then
-		ToggleDropDownMenu(1, nil, _G["PartyMemberFrame"..self.id.."DropDown"], "cursor", 0, 0)
-	elseif(_G[cunit.."FrameDropDown"]) then
-		ToggleDropDownMenu(1, nil, _G[cunit.."FrameDropDown"], "cursor", 0, 0)
-	end
-end
-
-addon.menu = menu
 
 
 local execute_range
 
-local ranges = {
-    WARRIOR1 = 0.2,
-    WARRIOR2 = 0.2,
-    WARRIOR3 = 0.2,
-
-    PRIEST1 = 0.2,
-    PRIEST2 = 0.2,
-    PRIEST3 = 0.2,
-}
-local SPELLS_CHANGED = function()
-    local class = select(2, UnitClass("player"))
-    local spec = GetSpecialization()
-    if not spec then execute_range = nil; return end
-    execute_range = ranges[class..spec]
+function ns.UpdateExecute(new_execute)
+    execute_range = new_execute
 end
-local f = CreateFrame("Frame")
-f:RegisterEvent("SPELLS_CHANGED")
--- f:RegisterEvent("PLAYER_ENTERING_WORLD")
-f:SetScript("OnEvent", SPELLS_CHANGED)
-
 
 local UnitIsTapDenied = UnitIsTapDenied
 local UnitIsEnemy = UnitIsEnemy
@@ -133,25 +103,6 @@ local PostUpdateHealth = function(self, unit, cur, max)
     end
 end
 
-local PostUpdatePower = function(self, event, unit, bar, min, max)
-	if(min == 0) then
-		bar.value:SetText()
-	elseif(UnitIsDead(unit) or UnitIsGhost(unit)) then
-		bar:SetValue(0)
-	elseif(not UnitIsConnected(unit)) then
-		bar.value:SetText()
-	else
-		bar.value:SetFormattedText('%s', min)
-	end
-end
-
-local backdrop = {
-	bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", tile = true, tileSize = 0,
---~ 	edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", edgeSize = 16,
-	insets = {left = -2, right = -2, top = -2, bottom = -2},
-}
-
-
 local Redraw = function(self)
     if not self.model_path then return end
 
@@ -168,7 +119,6 @@ local Redraw = function(self)
 end
 
 local ResetTransformations = function(self)
-    -- print(self:GetName(), "hiding", self:GetCameraDistance(), self:GetCameraPosition())
     self:SetModelScale(1)
     self:SetPosition(0,0,0)
 end
@@ -256,7 +206,6 @@ local function CreateThreatBar(parent)
     f:SetBackdrop(backdrop)
     f:SetBackdropColor(0,0,0,0.5)
     f:SetStatusBarTexture(tex)
-    -- 
     
     local bg = f:CreateTexture(nil,"BACKGROUND")
     bg:SetTexture(tex)
@@ -290,43 +239,34 @@ local function CreateThreatBar(parent)
     return f
 end
 
+local function CustomOnEnter(self, ...)
+    self.Name:Show()
+    -- self.Info:Show()
+    -- self.hppp:Show()
+    -- self.hpp:Show()
+    return UnitFrame_OnEnter(self, ...)
+end
 
-local SuupaTarget = function( self, unit)
+local function CustomOnLeave(self, ...)
+    self.Name:Hide()
+    -- self.Info:Hide()
+    -- self.hppp:Hide()
+    -- self.hpp:Hide()
+    return UnitFrame_OnLeave(self, ...)
+end
+
+function ns.oUF_NugTargetFrame( self, unit)
     local width = 307
     local height = 104
     self:SetHeight(height-30)
     self:SetWidth(width)
 
-
-	self.menu = menu
 	self.colors = colors
-
-    local CustomOnEnter = function(self, ...)
-        self.Name:Show()
-        -- self.Info:Show()
-        -- self.hppp:Show()
-        -- self.hpp:Show()
-        return UnitFrame_OnEnter(self, ...)
-    end
-
-    local CustomOnLeave = function(self, ...)
-        self.Name:Hide()
-        -- self.Info:Hide()
-        -- self.hppp:Hide()
-        -- self.hpp:Hide()
-        return UnitFrame_OnLeave(self, ...)
-    end
 
     self:SetScript("OnEnter", CustomOnEnter)
     self:SetScript("OnLeave", CustomOnLeave)
 
-	self:RegisterForClicks"anyup"
-	self:SetAttribute("*type2", "menu")
-    
-    
-    
-    
-    
+	self:RegisterForClicks"anyup"    
 
     local port = CreateFrame("PlayerModel",nil,self)
     local portsize = 64
@@ -337,7 +277,6 @@ local SuupaTarget = function( self, unit)
     port:SetPoint("TOPRIGHT",self,"TOPRIGHT",-25,-20)
 
     local portbg = port:CreateTexture(nil, "BACKGROUND")
-    -- portbg:SetVertexColor(0,0,0)
     portbg:SetTexture[[Interface\AddOns\oUF_NugTarget\target\portBG.tga]]
     portbg:SetAllPoints(port)
     
@@ -360,12 +299,6 @@ local SuupaTarget = function( self, unit)
     hp:SetHeight(height)
     hp:SetWidth(width)
     hp:SetPoint("TOPLEFT",self,"TOPLEFT",19,-20)
-
-    -- local m = 0.35
-    -- hp.SetColor = function(self, r,g,b)
-    --     self:SetStatusBarColor(r,g,b)
-    --     self.bg:SetVertexColor(r*m,g*m,b*m)
-    -- end
 
     hp.colorTapping = true
     hp.colorDisconnected = true
@@ -544,11 +477,14 @@ local SuupaTarget = function( self, unit)
     self.Info = info
 
 
-    local threatbar = CreateThreatBar(self)
-    threatbar:SetWidth(4)
-    threatbar:SetHeight(25)
-    threatbar:SetPoint("BOTTOMRIGHT", self.Portrait, "BOTTOMLEFT", -9, 28)
-    threatbar:SetColor( 0.3, 0, 0)
+    --==< THREAT BAR >==--
+    if unit == "target" then
+        local threatbar = CreateThreatBar(self)
+        threatbar:SetWidth(4)
+        threatbar:SetHeight(25)
+        threatbar:SetPoint("BOTTOMRIGHT", self.Portrait, "BOTTOMLEFT", -9, 28)
+        threatbar:SetColor( 0.3, 0, 0)
+    end
 
     --==< NAME TEXT >==--
     local name = hp:CreateFontString(nil, "OVERLAY", self.Health)
@@ -565,78 +501,67 @@ local SuupaTarget = function( self, unit)
     self.Name = name
 
     --==< AURAS >==--
-	if(unit == 'target') then
-		-- Buffs
-        local PostCreate = function (self, button, icons, index, debuff)
-            button.cd:SetReverse(true)
-            button.cd.noCooldownCount = true -- for OmniCC
-            local overlay = button.overlay
-            overlay:SetTexCoord(0,1,0,1)
-            button.icon:SetTexCoord(0.05, 0.95, 0.05, 0.95)
-            -- if not overlay then
-            --     overlay = button:CreateTexture("$parentBorder", "OVERLAY")
-            --     overlay:SetWidth(33); overlay:SetHeight(32);
-            --     overlay:SetPoint("CENTER",0,0)
-            -- end
-            -- button.overlay = overlay
-            overlay:SetTexture([[Interface\AddOns\oUF_NugTarget\buffBorder]])
-            if not button.isDebuff then
-                overlay:Show()
-                overlay:SetVertexColor(0.6,0.6,0.6, 1)
-                overlay.Hide = overlay.Show
-            end
-        end
-        
-		local buffs = CreateFrame("Frame", "oUF_Nuga_Buffs", self)
-		buffs:SetPoint("TOPLEFT", self, "TOPRIGHT",-5,-10)
-		buffs:SetHeight(24)
-		buffs:SetWidth(72)
-        buffs.PostCreateIcon = PostCreate
-
-		buffs.size = 24
-        buffs.initialAnchor = "TOPLEFT"
-        buffs["growth-x"] = "RIGHT"
-        buffs["growth-y"] = "DOWN"
-
-		self.Buffs = buffs
-
-		-- Debuffs
-		local debuffs = CreateFrame("Frame", "oUF_Nuga_Debuffs", self)
-		debuffs:SetPoint("TOPLEFT", self, "BOTTOMLEFT",45,-1)
-		debuffs:SetHeight(1)
-		debuffs:SetWidth(150)
-        debuffs.num = 16
-        debuffs.PostCreateIcon = PostCreate
-
-        -- debuffs.CustomFilter = function (   self, unit, icon, name, rank, texture, count, dtype,
-                                            -- duration, timeLeft, caster, isStealable, shouldConsolidate, spellID)
-            -- if 
+    -- Buffs
+    local PostCreate = function (self, button, icons, index, debuff)
+        button.cd:SetReverse(true)
+        button.cd.noCooldownCount = true -- for OmniCC
+        local overlay = button.overlay
+        overlay:SetTexCoord(0,1,0,1)
+        button.icon:SetTexCoord(0.05, 0.95, 0.05, 0.95)
+        -- if not overlay then
+        --     overlay = button:CreateTexture("$parentBorder", "OVERLAY")
+        --     overlay:SetWidth(33); overlay:SetHeight(32);
+        --     overlay:SetPoint("CENTER",0,0)
         -- end
-        debuffs.PostUpdateIcon = function(icons, unit, icon, index, offset)
-            -- icon.icon:SetScale(
-            -- if icon.o
-            -- print(unit)
-            if icon.owner == "player" or icon.owner == "pet" or UnitIsFriend("player", unit) then
-                icon:SetAlpha(1)
-                -- icon.icon:SetDesaturated(0)
-                -- icon:SetSize(36,36)
-            else
-                -- icon.icon:SetDesaturated(1)
-                icon:SetAlpha(.5)
-                -- icon:SetSize(28,28)
-            end
-
-            
+        -- button.overlay = overlay
+        overlay:SetTexture([[Interface\AddOns\oUF_NugTarget\buffBorder]])
+        if not button.isDebuff then
+            overlay:Show()
+            overlay:SetVertexColor(0.6,0.6,0.6, 1)
+            overlay.Hide = overlay.Show
         end
-        
-        debuffs.showDebuffType = true
-		debuffs.initialAnchor = "TOPLEFT"
-        debuffs["growth-x"] = "RIGHT"
-        debuffs["growth-y"] = "DOWN"
-		debuffs.size = 24--28
+    end
+    
+    local buffs = CreateFrame("Frame", "$parentBuffs", self)
+    buffs:SetPoint("TOPLEFT", self, "TOPRIGHT",-5,-10)
+    buffs:SetHeight(24)
+    buffs:SetWidth(72)
+    buffs.PostCreateIcon = PostCreate
 
-		self.Debuffs = debuffs
-	end
+    buffs.size = 24
+    buffs.initialAnchor = "TOPLEFT"
+    buffs["growth-x"] = "RIGHT"
+    buffs["growth-y"] = "DOWN"
+
+    self.Buffs = buffs
+
+    -- Debuffs
+    local debuffs = CreateFrame("Frame", "$parentDebuffs", self)
+    debuffs:SetPoint("TOPLEFT", self, "BOTTOMLEFT",45,-1)
+    debuffs:SetHeight(1)
+    debuffs:SetWidth(150)
+    debuffs.num = 16
+    debuffs.PostCreateIcon = PostCreate
+    
+    debuffs.PostUpdateIcon = function(icons, unit, icon, index, offset)
+        if icon.caster == "player" or icon.caster == "pet" or UnitIsFriend("player", unit) then
+            icon:SetAlpha(1)
+            -- icon.icon:SetDesaturated(0)
+            -- icon:SetSize(36,36)
+        else
+            -- icon.icon:SetDesaturated(1)
+            icon:SetAlpha(.5)
+            -- icon:SetSize(28,28)
+        end       
+    end
+    
+    debuffs.showDebuffType = true
+    debuffs.initialAnchor = "TOPLEFT"
+    debuffs["growth-x"] = "RIGHT"
+    debuffs["growth-y"] = "DOWN"
+    debuffs.size = 24--28
+
+    self.Debuffs = debuffs
     
     --==< LEADER ICON >==--
     local leader = self:CreateFontString(nil, "OVERLAY", self)
@@ -648,14 +573,12 @@ local SuupaTarget = function( self, unit)
     self.Leader = leader
     
     --==< RAID ICON >==--
-    -- if unit == "target" then
-        local raidicon = self:CreateTexture(nil, "OVERLAY")
-        raidicon:SetHeight(20)
-        raidicon:SetWidth(20)
-        -- raidicon:SetTexture("Interface\\TargetingFrame\\UI-RaidTargetingIcons")
-        raidicon:SetPoint("TOPRIGHT",self.Portrait, "TOPRIGHT",0,0)
-        self.RaidIcon = raidicon
-    -- end
+    local raidicon = self.Portrait:CreateTexture(nil, "OVERLAY")
+    raidicon:SetHeight(20)
+    raidicon:SetWidth(20)
+    -- raidicon:SetTexture("Interface\\TargetingFrame\\UI-RaidTargetingIcons")
+    raidicon:SetPoint("TOPRIGHT",self.Portrait, "TOPRIGHT",0,0)
+    self.RaidTargetIndicator = raidicon
     
     
     self:EnableMouse(true)
@@ -671,7 +594,7 @@ end
 
 
 
-local SuupaTOT = function( self, unit)
+function ns.oUF_NugTargetTargetFrame(self, unit)
     local width = 256 * 0.52
     local height = 88 * 0.52
     self:SetHeight(height)
@@ -683,9 +606,8 @@ local SuupaTOT = function( self, unit)
 	self:SetScript("OnEnter", UnitFrame_OnEnter)
 	self:SetScript("OnLeave", UnitFrame_OnLeave)
     
---~ 	self.menu = menu
---~ 	self:RegisterForClicks"anyup"
---~ 	self:SetAttribute("*type2", "menu")
+ 	self:RegisterForClicks"anyup"
+    -- self:SetAttribute("*type2", "menu")
 
 
     
@@ -744,22 +666,3 @@ local SuupaTOT = function( self, unit)
 
 
 end
-
-
-
-
-
-
-
-
-oUF:RegisterStyle("SuupaTarget", SuupaTarget)
-oUF:SetActiveStyle"SuupaTarget"
-local target = oUF:Spawn("target","oUF_Target")
-
-target:SetPoint("LEFT", UIParent, "CENTER", 230, -70)
-
-
-oUF:RegisterStyle("SuupaTOT", SuupaTOT)
-oUF:SetActiveStyle"SuupaTOT"
-local targettarget = oUF:Spawn("targettarget","oUF_TargetTarget")
-targettarget:SetPoint("BOTTOM",target,"TOP",61,-15)

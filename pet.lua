@@ -1,9 +1,8 @@
-local addonName, addon = ...
+local addonName, ns = ...
 
-local colors = addon.colors
-local menu = addon.menu
+local colors = ns.colors
 
-function oUF_NugPetFrame(self, unit)
+function ns.oUF_NugGenericSmallFrame(self, unit)
     local m=0.45
     -- local height = 100*m
     -- local width = 255*m
@@ -12,12 +11,11 @@ function oUF_NugPetFrame(self, unit)
     self:SetHeight(height)
     self:SetWidth(width)
 
-    self.menu = menu
 	self:SetScript("OnEnter", UnitFrame_OnEnter)
 	self:SetScript("OnLeave", UnitFrame_OnLeave)
 
-	self:RegisterForClicks"anyup"
-	self:SetAttribute("*type2", "menu")
+	-- self:RegisterForClicks"anyup"
+	-- self:SetAttribute("*type2", nil) -- disable right click
     
     self.colors = colors
     
@@ -82,11 +80,3 @@ function oUF_NugPetFrame(self, unit)
     bg:SetTexCoord(0, 278/512, 0, 0.95)
     
 end
-
-
-
-oUF:RegisterStyle("playetpet", oUF_NugPetFrame)
-oUF:SetActiveStyle"playetpet"
-local pet = oUF:Spawn("pet","oUF_Pet")
--- pet:SetPoint("BOTTOMLEFT",oUF_Player,"BOTTOMRIGHT",-13,59)
-pet:SetPoint("BOTTOMRIGHT", UIParent,"BOTTOMRIGHT",-150,100)

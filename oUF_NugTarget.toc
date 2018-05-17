@@ -3,7 +3,8 @@
 ## Version: 1
 ## Dependencies: oUF
 ## Notes: oUF layout
-player.lua
+
+helpers.lua
 target.lua
 pet.lua
-focus.lua
+layout.lua
