@@ -379,11 +379,13 @@ function ns.oUF_NugTargetFrame( self, unit)
     self.Health = hp
     self.Health.PostUpdate = PostUpdateHealth
 
+    local mp_height = 10
+
     local mp = CreateFrame("StatusBar",nil,self)
     mp:SetFrameStrata("LOW")
     mp:SetStatusBarTexture(texture)
     mp:GetStatusBarTexture():SetDrawLayer("ARTWORK",1)
-    mp:SetHeight(9)
+    mp:SetHeight(mp_height)
     mp:SetWidth(width)
     mp:SetPoint("TOPLEFT",self,"TOPLEFT",19,-50)
 
@@ -402,7 +404,7 @@ function ns.oUF_NugTargetFrame( self, unit)
     local spark = mp:CreateTexture(nil, "ARTWORK", nil, 4)
     spark:SetBlendMode("ADD")
     spark:SetTexture([[Interface\AddOns\oUF_NugTarget\vialSparkH.tga]])
-    spark:SetSize(sparkWidth, 9)
+    spark:SetSize(sparkWidth, mp_height)
 
     spark:SetPoint("CENTER", f, "TOP",0,0)
     spark:SetVertexColor(unpack(colors.health))
