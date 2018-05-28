@@ -278,7 +278,8 @@ function ns.oUF_NugTargetFrame( self, unit)
 
     local portbg = port:CreateTexture(nil, "BACKGROUND")
     portbg:SetTexture[[Interface\AddOns\oUF_NugTarget\target\portBG.tga]]
-    portbg:SetAllPoints(port)
+    portbg:SetPoint("TOPLEFT", port, "TOPLEFT", -1,0)
+    portbg:SetPoint("BOTTOMRIGHT", port, "BOTTOMRIGHT", 0,0)
     
     self.Portrait = port
     
