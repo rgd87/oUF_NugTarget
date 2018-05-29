@@ -204,7 +204,7 @@ local function CreateThreatBar(parent)
         insets = {left = -2, right = -2, top = -2, bottom = -2},
     }
     f:SetBackdrop(backdrop)
-    f:SetBackdropColor(0,0,0,0.5)
+    f:SetBackdropColor(0,0,0,0.65)
     f:SetStatusBarTexture(tex)
     
     local bg = f:CreateTexture(nil,"BACKGROUND")
@@ -483,9 +483,10 @@ function ns.oUF_NugTargetFrame( self, unit)
     --==< THREAT BAR >==--
     if unit == "target" then
         local threatbar = CreateThreatBar(self)
-        threatbar:SetWidth(4)
+        threatbar:SetFrameLevel(7)
+        threatbar:SetWidth(5)
         threatbar:SetHeight(25)
-        threatbar:SetPoint("BOTTOMRIGHT", self.Portrait, "BOTTOMLEFT", -9, 28)
+        threatbar:SetPoint("TOPRIGHT",self,"TOPRIGHT",-95,-30)
         threatbar:SetColor( 0.3, 0, 0)
     end
 
