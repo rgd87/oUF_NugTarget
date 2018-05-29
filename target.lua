@@ -226,7 +226,12 @@ local function CreateThreatBar(parent)
     f:SetScript("OnEvent", function(self, event)
         if UnitExists("target") and (IsInGroup() or UnitExists("pet") ) then
             local isTanking, state, scaledPercent, rawPercent, threatValue = UnitDetailedThreatSituation("player", "target")
-            if scaledPercent then
+            if isTanking and state > 1 then
+                self:SetColor(GetThreatStatusColor(state))
+                self:SetValue(1)
+                self:Show()
+                return
+            elseif scaledPercent then
                 self:SetColor(GetPercentColor(1 - scaledPercent/100))
                 self:SetValue(scaledPercent/100)
                 self:Show()
@@ -448,7 +453,7 @@ function ns.oUF_NugTargetFrame( self, unit)
 
 
     --==< HEALTH BAR TEXT >==--
-    local hpp = self:CreateFontString(nil, "OVERLAY", self)
+    local hpp = self.Portrait:CreateFontString(nil, "OVERLAY", self)
     hpp:SetFont(font1,font1size,"OUTLINE")
     hpp:SetJustifyH"LEFT"
     hpp:SetTextColor(0, 1, 0)
@@ -457,7 +462,7 @@ function ns.oUF_NugTargetFrame( self, unit)
 
     self.hpp = hpp
     
-    local hppp = self:CreateFontString(nil, "OVERLAY", self)
+    local hppp = self.Portrait:CreateFontString(nil, "OVERLAY", self)
     hppp:SetFont(font1,font1size,"OUTLINE")
     hppp:SetJustifyH"LEFT"
     hppp:SetTextColor(0, 1, 0)
@@ -488,6 +493,15 @@ function ns.oUF_NugTargetFrame( self, unit)
         threatbar:SetHeight(25)
         threatbar:SetPoint("TOPRIGHT",self,"TOPRIGHT",-95,-30)
         threatbar:SetColor( 0.3, 0, 0)
+
+        -- -- Position and size
+        -- local ThreatIndicator = self.Portrait:CreateTexture(nil, 'OVERLAY')
+        -- ThreatIndicator.feedbackUnit = "player"
+        -- ThreatIndicator:SetSize(16, 16)
+        -- ThreatIndicator:SetPoint('TOPLEFT', self.Portrait, "TOPLEFT", 0, -20)
+
+        -- -- Register it with oUF
+        -- self.ThreatIndicator = ThreatIndicator
     end
 
     --==< NAME TEXT >==--
