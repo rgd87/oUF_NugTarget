@@ -23,12 +23,3 @@ oUF:SetActiveStyle"oUF_NugGenericSmallFrame"
 local pet = oUF:Spawn("pet","oUF_Pet")
 pet:SetPoint("BOTTOMRIGHT", UIParent,"BOTTOMRIGHT",-150,100)
 
-
-oUF:RegisterStyle("oUF_SuupaPlayer", ns.oUF_SuupaPlayer)
-oUF:SetActiveStyle"oUF_SuupaPlayer"
-
-local player = oUF:Spawn("player","oUF_Player")
-player:SetScale(0.85)
-player:SetFrameLevel(7)
-player:SetPoint("LEFT","ActionButton12","RIGHT",3)
-player:SetPoint("BOTTOM",UIParent,"BOTTOM",0,-3)
