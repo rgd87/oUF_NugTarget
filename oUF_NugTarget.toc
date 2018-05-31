@@ -7,4 +7,5 @@
 helpers.lua
 target.lua
 pet.lua
+player.lua
 layout.lua

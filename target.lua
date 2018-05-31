@@ -512,6 +512,7 @@ function ns.oUF_NugTargetFrame( self, unit)
     self:Tag(name, '[raidcolor][name]')
     
     
+    -- name:SetHeight(height)
     name:SetPoint("LEFT",self.Health,"LEFT",10,0)
     name:SetPoint("RIGHT",self.Health,"RIGHT",-10,0)
     name:Hide()
