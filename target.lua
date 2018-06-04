@@ -260,7 +260,13 @@ local function CustomOnLeave(self, ...)
     return UnitFrame_OnLeave(self, ...)
 end
 
-function ns.oUF_NugTargetFrame( self, unit)
+function ns.oUF_NugTargetFrame(addCastbar)
+    return function(self, unit)
+        return ns.oUF_NugTargetFrame1(self, unit, addCastbar)
+    end
+end
+
+function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
     local width = 307
     local height = 104
     self:SetHeight(height-30)
@@ -581,6 +587,21 @@ function ns.oUF_NugTargetFrame( self, unit)
     debuffs.size = 24--28
 
     self.Debuffs = debuffs
+
+    print('addCastbar', addCastbar)
+    if addCastbar then
+        
+        local cw,ch = 207, 18
+        local castbar = ns:CreateCastbar(self, cw, ch, true)
+        castbar:SetColor(0.6, 0, 1)
+
+        castbar:SetPoint("TOPLEFT", self, "BOTTOMLEFT",32,-2)
+        debuffs:SetPoint("TOPLEFT", self, "BOTTOMLEFT",45,-4-ch)
+
+        self.Castbar = castbar
+    end
+
+
     
     --==< LEADER ICON >==--
     local leader = self:CreateFontString(nil, "OVERLAY", self)

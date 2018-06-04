@@ -5,6 +5,7 @@
 ## Notes: oUF layout
 
 helpers.lua
+castbar.lua
 target.lua
 pet.lua
 layout.lua
