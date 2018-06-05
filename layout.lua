@@ -3,6 +3,7 @@ local addonName, ns = ...
 local createFocusTarget = true
 local targetCastbar = false
 local focusCastbar = true
+local petCastbar = false
 
 
 oUF:RegisterStyle("oUF_NugTargetFrame", ns.oUF_NugTargetFrame(targetCastbar))
@@ -30,9 +31,17 @@ end
 
 
 
-oUF:RegisterStyle("oUF_NugGenericSmallFrame", ns.oUF_NugGenericSmallFrame)
-oUF:SetActiveStyle"oUF_NugGenericSmallFrame"
+oUF:RegisterStyle("oUF_NugPetFrame", ns.oUF_NugGenericSmallFrame(petCastbar, false))
+oUF:SetActiveStyle"oUF_NugPetFrame"
 
 local pet = oUF:Spawn("pet","oUF_Pet")
 pet:SetPoint("BOTTOMRIGHT", UIParent,"BOTTOMRIGHT",-150,100)
+
+
+oUF:RegisterStyle("oUF_NugBossFrame", ns.oUF_NugGenericSmallFrame(true, false))
+oUF:SetActiveStyle"oUF_NugBossFrame"
+for i=1,MAX_BOSS_FRAMES do
+    local bossunit = "boss"..i
+    oUF:Spawn(bossunit,"oUF_Boss"..i):SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", -15, -220 - 90*(i-1) )
+end
 

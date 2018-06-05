@@ -26,6 +26,27 @@ function(u)
 end
 ]]
 
+local format = string.format
+
+oUF.Tags.Events["tankthreat"] = "UNIT_THREAT_LIST_UPDATE"
+oUF.Tags.Methods["tankthreat"] = function(unit)
+    local isTanking, status, percentage, rawPercentage = UnitDetailedThreatSituation("player", unit)
+    if isTanking then
+        lead = UnitThreatPercentageOfLead("player", unit)
+        if not lead or lead == 0 then return end
+        if lead > 999 then lead = 999 end
+        leadhex = ns:GetThresholdHexColor(lead, 100, 130, 200, 400)
+        -- print(isTanking, lead)
+        return format("|cff%s%d|r", leadhex, lead)
+    elseif percentage and percentage > 50 then
+        -- threathex = ns:GetThresholdHexColor(rawPercentage, 0, 100, 110)
+        -- return format("|cff%s%d|r", threathex, rawPercent)
+        threathex = ns:GetThresholdHexColor(percentage, 100, 0)
+        -- print(isTanking, percentage, rawPercentage)
+        return format("|cff%s%d|r", threathex, percentage)
+    end
+end
+
 local mana = {.4, .4, 1}
 local colors = setmetatable({
     health = { .8, 0.15, 0.15}, {__index = oUF.health},
@@ -190,65 +211,65 @@ local function GetPercentColor(percent)
     end
 end
 
-local function CreateThreatBar(parent)
-    local f = CreateFrame("StatusBar", "$parent_ThreatBar", parent)
-    local width, height= 3, 20
-    local tex = [[Interface\AddOns\oUF_NugTarget\vstatusbar]]
-    f:SetOrientation("VERTICAL")
-    f:SetWidth(width)
-    f:SetHeight(height)
-    f:SetMinMaxValues(0,1)
+-- local function CreateThreatBar(parent)
+--     local f = CreateFrame("StatusBar", "$parent_ThreatBar", parent)
+--     local width, height= 3, 20
+--     local tex = [[Interface\AddOns\oUF_NugTarget\vstatusbar]]
+--     f:SetOrientation("VERTICAL")
+--     f:SetWidth(width)
+--     f:SetHeight(height)
+--     f:SetMinMaxValues(0,1)
     
-    local backdrop = {
-        bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", tile = true, tileSize = 0,
-        insets = {left = -2, right = -2, top = -2, bottom = -2},
-    }
-    f:SetBackdrop(backdrop)
-    f:SetBackdropColor(0,0,0,0.65)
-    f:SetStatusBarTexture(tex)
+--     local backdrop = {
+--         bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", tile = true, tileSize = 0,
+--         insets = {left = -2, right = -2, top = -2, bottom = -2},
+--     }
+--     f:SetBackdrop(backdrop)
+--     f:SetBackdropColor(0,0,0,0.65)
+--     f:SetStatusBarTexture(tex)
     
-    local bg = f:CreateTexture(nil,"BACKGROUND")
-    bg:SetTexture(tex)
-    bg:SetAllPoints(f)
-    f.bg = bg
+--     local bg = f:CreateTexture(nil,"BACKGROUND")
+--     bg:SetTexture(tex)
+--     bg:SetAllPoints(f)
+--     f.bg = bg
 
-    f.SetColor = function(self, r,g,b)
-        r,g,b = r+.3, g+.3, b+.3
-        self:SetStatusBarColor(r,g,b)
-        self.bg:SetVertexColor(r*.3,g*.3,b*.3)
-    end
+--     f.SetColor = function(self, r,g,b)
+--         r,g,b = r+.3, g+.3, b+.3
+--         self:SetStatusBarColor(r,g,b)
+--         self.bg:SetVertexColor(r*.3,g*.3,b*.3)
+--     end
 
-    f:RegisterUnitEvent("UNIT_THREAT_LIST_UPDATE", "target")
-    f:RegisterEvent("PLAYER_TARGET_CHANGED")
+--     f:RegisterUnitEvent("UNIT_THREAT_LIST_UPDATE", "target")
+--     f:RegisterEvent("PLAYER_TARGET_CHANGED")
 
-    local UnitExists = UnitExists
-    local IsInGroup = IsInGroup
-    f:SetScript("OnEvent", function(self, event)
-        if UnitExists("target") and (IsInGroup() or UnitExists("pet") ) then
-            local isTanking, state, scaledPercent, rawPercent, threatValue = UnitDetailedThreatSituation("player", "target")
-            if isTanking and state > 1 then
-                self:SetColor(GetThreatStatusColor(state))
-                self:SetValue(1)
-                self:Show()
-                return
-            elseif scaledPercent then
-                self:SetColor(GetPercentColor(1 - scaledPercent/100))
-                self:SetValue(scaledPercent/100)
-                self:Show()
-                return
-            end
-        end
-        self:Hide() 
-    end)
+--     local UnitExists = UnitExists
+--     local IsInGroup = IsInGroup
+--     f:SetScript("OnEvent", function(self, event)
+--         if UnitExists("target") and (IsInGroup() or UnitExists("pet") ) then
+--             local isTanking, state, scaledPercent, rawPercent, threatValue = UnitDetailedThreatSituation("player", "target")
+--             if isTanking and state > 1 then
+--                 self:SetColor(GetThreatStatusColor(state))
+--                 self:SetValue(1)
+--                 self:Show()
+--                 return
+--             elseif scaledPercent then
+--                 self:SetColor(GetPercentColor(1 - scaledPercent/100))
+--                 self:SetValue(scaledPercent/100)
+--                 self:Show()
+--                 return
+--             end
+--         end
+--         self:Hide() 
+--     end)
 
-    return f
-end
+--     return f
+-- end
 
 local function CustomOnEnter(self, ...)
     self.Name:Show()
     -- self.Info:Show()
     -- self.hppp:Show()
-    -- self.hpp:Show()
+    self.hpp:Show()
     return UnitFrame_OnEnter(self, ...)
 end
 
@@ -256,7 +277,7 @@ local function CustomOnLeave(self, ...)
     self.Name:Hide()
     -- self.Info:Hide()
     -- self.hppp:Hide()
-    -- self.hpp:Hide()
+    self.hpp:Hide()
     return UnitFrame_OnLeave(self, ...)
 end
 
@@ -459,24 +480,27 @@ function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
 
 
     --==< HEALTH BAR TEXT >==--
-    local hpp = self.Portrait:CreateFontString(nil, "OVERLAY", self)
-    hpp:SetFont(font1,font1size,"OUTLINE")
-    hpp:SetJustifyH"LEFT"
-    hpp:SetTextColor(0, 1, 0)
-    hpp:SetPoint("TOPLEFT", self.Portrait, "TOPLEFT", 1, -3)
-    self:Tag(hpp, '[shorthp]')
-
-    self.hpp = hpp
+    
     
     local hppp = self.Portrait:CreateFontString(nil, "OVERLAY", self)
     hppp:SetFont(font1,font1size,"OUTLINE")
     hppp:SetJustifyH"LEFT"
     hppp:SetTextColor(0, 1, 0)
-    hppp:SetPoint("BOTTOMLEFT", self.Portrait, "BOTTOMLEFT", 1, 1)
+    hppp:SetPoint("TOPLEFT", self.Portrait, "TOPLEFT", 1, -3)
     self:Tag(hppp, '[perhp]')
 
     self.hppp = hppp
 
+    local hpp = self.Portrait:CreateFontString(nil, "OVERLAY", self)
+    hpp:SetFont(font1,font1size,"OUTLINE")
+    hpp:SetJustifyH"LEFT"
+    hpp:SetTextColor(0, 1, 0)
+    -- hpp:SetPoint("TOPLEFT", self.Portrait, "TOPLEFT", 1, -3)
+    hpp:SetPoint("TOPLEFT", hppp, "BOTTOMLEFT", 0, -2)
+    self:Tag(hpp, '[shorthp]')
+    hpp:Hide()
+
+    self.hpp = hpp
 
 	--==< LEVEL TEXT >==--
     local info = self.Portrait:CreateFontString(nil, "OVERLAY", self.Portrait)
@@ -493,14 +517,21 @@ function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
 
     --==< THREAT BAR >==--
     if unit == "target" then
-        local threatbar = CreateThreatBar(self)
-        threatbar:SetFrameLevel(7)
-        threatbar:SetWidth(5)
-        threatbar:SetHeight(25)
-        threatbar:SetPoint("TOPRIGHT",self,"TOPRIGHT",-95,-30)
-        threatbar:SetColor( 0.3, 0, 0)
+        local threatp = self.Portrait:CreateFontString(nil, "OVERLAY", self)
+        threatp:SetFont(font1,font1size,"OUTLINE")
+        threatp:SetJustifyH"LEFT"
+        -- threatp:SetTextColor(0, 1, 0)
+        -- threatp:SetPoint("TOPLEFT", self.Portrait, "TOPLEFT", 1, -3)
+        threatp:SetPoint("BOTTOMLEFT", self.Portrait, "BOTTOMLEFT", 1, 1)
+        self:Tag(threatp, '[tankthreat]')
 
-        -- -- Position and size
+        -- local threatbar = CreateThreatBar(self)
+        -- threatbar:SetFrameLevel(7)
+        -- threatbar:SetWidth(5)
+        -- threatbar:SetHeight(25)
+        -- threatbar:SetPoint("TOPRIGHT",self,"TOPRIGHT",-95,-30)
+        -- threatbar:SetColor( 0.3, 0, 0)
+
         -- local ThreatIndicator = self.Portrait:CreateTexture(nil, 'OVERLAY')
         -- ThreatIndicator.feedbackUnit = "player"
         -- ThreatIndicator:SetSize(16, 16)
@@ -588,9 +619,7 @@ function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
 
     self.Debuffs = debuffs
 
-    print('addCastbar', addCastbar)
-    if addCastbar then
-        
+    if addCastbar then        
         local cw,ch = 207, 18
         local castbar = ns:CreateCastbar(self, cw, ch, true)
         castbar:SetColor(0.6, 0, 1)
@@ -705,4 +734,82 @@ function ns.oUF_NugTargetTargetFrame(self, unit)
     self.Name = name
 
 
+end
+
+
+
+
+
+-- function from LibCrayon
+local function GetThresholdPercentage(quality, ...)
+    local n = select('#', ...)
+    if n <= 1 then
+        return GetThresholdPercentage(quality, 0, ... or 1)
+    end
+
+    local worst = ...
+    local best = select(n, ...)
+
+    if worst == best and quality == worst then
+        return 0.5
+    end
+
+    if worst <= best then
+        if quality <= worst then
+            return 0
+        elseif quality >= best then
+            return 1
+        end
+        local last = worst
+        for i = 2, n-1 do
+            local value = select(i, ...)
+            if quality <= value then
+                return ((i-2) + (quality - last) / (value - last)) / (n-1)
+            end
+            last = value
+        end
+
+        local value = select(n, ...)
+        return ((n-2) + (quality - last) / (value - last)) / (n-1)
+    else
+        if quality >= worst then
+            return 0
+        elseif quality <= best then
+            return 1
+        end
+        local last = worst
+        for i = 2, n-1 do
+            local value = select(i, ...)
+            if quality >= value then
+                return ((i-2) + (quality - last) / (value - last)) / (n-1)
+            end
+            last = value
+        end
+
+        local value = select(n, ...)
+        return ((n-2) + (quality - last) / (value - last)) / (n-1)
+    end
+end
+
+function ns:GetThresholdColor(quality, ...)
+    if quality ~= quality then
+        return 1, 1, 1
+    end
+
+    local percent = GetThresholdPercentage(quality, ...)
+
+    if percent <= 0 then
+        return 1, 0, 0
+    elseif percent <= 0.5 then
+        return 1, percent*2, 0
+    elseif percent >= 1 then
+        return 0, 1, 0
+    else
+        return 2 - percent*2, 1, 0
+    end
+end
+
+function ns:GetThresholdHexColor(quality, ...)
+    local r, g, b = self:GetThresholdColor(quality, ...)
+    return string.format("%02x%02x%02x", r*255, g*255, b*255)
 end

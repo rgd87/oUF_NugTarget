@@ -2,7 +2,13 @@ local addonName, ns = ...
 
 local colors = ns.colors
 
-function ns.oUF_NugGenericSmallFrame(self, unit)
+function ns.oUF_NugGenericSmallFrame(addCastbar, colorClass)
+    return function(self, unit)
+        return ns.oUF_NugGenericSmallFrame1(self, unit, addCastbar, colorClass)
+    end
+end
+
+function ns.oUF_NugGenericSmallFrame1(self, unit, addCastbar, colorClass)
     local m=0.45
     -- local height = 100*m
     -- local width = 255*m
@@ -34,8 +40,9 @@ function ns.oUF_NugGenericSmallFrame(self, unit)
 
     hp.colorTapping = true
     hp.colorDisconnected = true
-    hp.frequentUpdates = true
     hp.colorHealth = true
+    hp.colorClass = colorClass
+    hp.frequentUpdates = true
     -- hp.Smooth = true
 
     hp.bg = hp:CreateTexture(nil, "BORDER")
@@ -78,5 +85,15 @@ function ns.oUF_NugGenericSmallFrame(self, unit)
     bg:SetAllPoints(self)
     bg:SetTexture[[Interface\AddOns\oUF_NugTarget\target\petBG]]
     bg:SetTexCoord(0, 278/512, 0, 0.95)
+
+    if addCastbar then        
+        local cw,ch = 155, 18
+        local castbar = ns:CreateCastbar(self, cw, ch, true)
+        castbar:SetColor(0.6, 0, 1)
+
+        castbar:SetPoint("TOPLEFT", self, "BOTTOMLEFT",10,1)
+
+        self.Castbar = castbar
+    end
     
 end
