@@ -1,4 +1,4 @@
-## Interface: 70300
+## Interface: 80000
 ## Author: d87
 ## Version: 1
 ## Dependencies: oUF
