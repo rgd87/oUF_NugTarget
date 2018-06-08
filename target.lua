@@ -10,15 +10,19 @@ local font2size = 13
 oUF.Tags.Events["shorthp"] = "UNIT_HEALTH"
 oUF.Tags.Methods["shorthp"] = [[
 function(u)
-    local floor = math.floor
+    local format = string.format
     local v = UnitHealth(u)
-    local ms = floor(v/1000000)
-    if ms > 10 then
-        return ms.."M"
+    local ms = v/1000000
+    if ms >= 10 then
+        return format("%dM", ms)
+    elseif ms >= 1 then
+        return format("%.1fM", ms)
     else
-        local ks = floor(v/1000)
-        if  ks > 10 then
-            return ks.."K"
+        local ks = v/1000
+        if ks >= 10 then
+            return format("%dK", ks)
+        elseif ks >= 1 then
+            return format("%.1fK", ks)
         else
             return v
         end
@@ -269,7 +273,7 @@ local function CustomOnEnter(self, ...)
     self.Name:Show()
     -- self.Info:Show()
     -- self.hppp:Show()
-    self.hpp:Show()
+    -- self.hpp:Show()
     return UnitFrame_OnEnter(self, ...)
 end
 
@@ -277,7 +281,7 @@ local function CustomOnLeave(self, ...)
     self.Name:Hide()
     -- self.Info:Hide()
     -- self.hppp:Hide()
-    self.hpp:Hide()
+    -- self.hpp:Hide()
     return UnitFrame_OnLeave(self, ...)
 end
 
@@ -498,7 +502,7 @@ function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
     -- hpp:SetPoint("TOPLEFT", self.Portrait, "TOPLEFT", 1, -3)
     hpp:SetPoint("TOPLEFT", hppp, "BOTTOMLEFT", 0, -2)
     self:Tag(hpp, '[shorthp]')
-    hpp:Hide()
+    -- hpp:Hide()
 
     self.hpp = hpp
 
