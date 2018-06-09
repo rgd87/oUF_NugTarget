@@ -179,7 +179,11 @@ local ScrollFrameSetValue = function(self, cur)
     local max = self._max
     local min = self._min
     self._cur = cur
-    local v = (cur - min) / (max - min)
+    local total = (max - min)
+    local v =0
+    if total ~= 0 then
+        v = (cur - min) / total
+    end
     if v > 1 then v = 1 end
     if v <= 0 then v = 0.001 end
     local H = self._width
