@@ -601,7 +601,7 @@ function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
 
     -- Debuffs
     local debuffs = CreateFrame("Frame", "$parentDebuffs", self)
-    debuffs:SetPoint("TOPLEFT", self, "BOTTOMLEFT",45,-1)
+    debuffs:SetPoint("TOPLEFT", self, "BOTTOMLEFT",57,-1)
     debuffs:SetHeight(1)
     debuffs:SetWidth(150)
     debuffs.num = 16
