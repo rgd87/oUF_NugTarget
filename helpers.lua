@@ -7,20 +7,42 @@ end)
 frame:RegisterEvent("SPELLS_CHANGED")
 
 local ranges = {
-    WARRIOR1 = 0.2,
-    WARRIOR2 = 0.2,
-    WARRIOR3 = 0.2,
-
-    PRIEST1 = 0.2,
-    PRIEST2 = 0.2,
-    PRIEST3 = 0.2,
+    WARRIOR = {
+        function() return IsPlayerSpell(281001) and 0.35 or 0.2 end, -- massacre
+        function() return IsPlayerSpell(206315) and 0.35 or 0.2 end, -- fury massacre
+    },
+    ROGUE = {
+        function() return IsPlayerSpell(111240) and 0.30 end, -- blindside
+    },
+    WARLOCK = {
+        function() return IsPlayerSpell(198590) and 0.20 end, -- drain soul
+    },
+    PRIEST = {
+        function() return IsPlayerSpell(265259) and 0.20 end, -- twist of fate
+        nil,
+        function() return (IsPlayerSpell(109142) and 0.35) or (IsPlayerSpell(32379) and 0.20) end, -- twist of fate or swd
+    },
+    PALADIN = {
+        [3] = function() return IsPlayerSpell(24275) and 0.20 end, -- HoW
+    },
+    HUNTER = {
+        function() return IsPlayerSpell(273887) and 0.35 end, -- Killer Instinct
+        function() return IsPlayerSpell(260228) and 0.30 end, -- Careful Aim
+    }
 }
 function frame:SPELLS_CHANGED()
     local class = select(2, UnitClass("player"))
     local spec = GetSpecialization()
     if not spec then execute_range = nil; return end
-    local execute_range = ranges[class..spec]
-    ns.UpdateExecute(execute_range)
+    local classopts = ranges[class]
+    local range
+    if classopts then
+        local range = classopts[spec]
+        if type(range) == "function" then
+            range = range()
+        end
+    end
+    ns.UpdateExecute(range)
 end
 
 
