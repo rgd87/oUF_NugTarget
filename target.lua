@@ -84,10 +84,10 @@ local UnitIsTapDenied = UnitIsTapDenied
 local UnitIsEnemy = UnitIsEnemy
 local UnitIsFriend = UnitIsFriend 
 local PostUpdateHealth = function(self, unit, cur, max)
-    -- print(unit, cur, max, execute_range )
     local health = self
     local self = health:GetParent()
     local r, g, b, t
+
     if (health.colorTapping and not UnitPlayerControlled(unit) and
         UnitIsTapDenied(unit) ) then
         t = self.colors.tapped

@@ -18,9 +18,7 @@ local ranges = {
         function() return IsPlayerSpell(198590) and 0.20 end, -- drain soul
     },
     PRIEST = {
-        function() return IsPlayerSpell(265259) and 0.20 end, -- twist of fate
-        nil,
-        function() return (IsPlayerSpell(109142) and 0.35) or (IsPlayerSpell(32379) and 0.20) end, -- twist of fate or swd
+        [3] = function() return (IsPlayerSpell(109142) and 0.35) or (IsPlayerSpell(32379) and 0.20) end, -- twist of fate or swd
     },
     PALADIN = {
         [3] = function() return IsPlayerSpell(24275) and 0.20 end, -- HoW
@@ -37,7 +35,7 @@ function frame:SPELLS_CHANGED()
     local classopts = ranges[class]
     local range
     if classopts then
-        local range = classopts[spec]
+        range = classopts[spec]
         if type(range) == "function" then
             range = range()
         end
