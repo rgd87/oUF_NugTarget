@@ -5,6 +5,7 @@ local font1size = 8
 --~ local font2 = [[Interface\AddOns\oUF_NugTarget\fonts\Unvers.TTF]]
 --~ local font2 = [[Interface\AddOns\oUF_NugTarget\fonts\iFlash 706.TTF]]
 local font2 = [[Interface\AddOns\oUF_NugTarget\fonts\ClearFontBold.ttf]]
+local font3 = [[Interface\AddOns\oUF_NugTarget\fonts\ClearFont.ttf]]
 local font2size = 13
 
 oUF.Tags.Events["shorthp"] = "UNIT_HEALTH"
@@ -53,7 +54,7 @@ end
 
 local mana = {.4, .4, 1}
 local colors = setmetatable({
-    health = { .8, 0.15, 0.15}, {__index = oUF.health},
+    health = { .8, 0.15, 0.15},
     execute = { 1, .3, .45 },
 	power = setmetatable({
 		["MANA"] = mana,
@@ -821,3 +822,158 @@ function ns:GetThresholdHexColor(quality, ...)
     local r, g, b = self:GetThresholdColor(quality, ...)
     return string.format("%02x%02x%02x", r*255, g*255, b*255)
 end
+
+
+local MakeBorder = function(self, tex, left, right, top, bottom, level)
+    local t = self:CreateTexture(nil,"BACKGROUND",nil,level)
+    t:SetTexture(tex)
+    t:SetPoint("TOPLEFT", self, "TOPLEFT", left, -top)
+    t:SetPoint("BOTTOMRIGHT", self, "BOTTOMRIGHT", -right, bottom)
+    return t
+end
+
+
+
+-- local nameplateEventHandler = CreateFrame("Frame", nil, UIParent)
+-- nameplateEventHandler:RegisterEvent("PLAYER_TARGET_CHANGED")
+-- nameplateEventHandler:RegisterEvent("UPDATE_MOUSEOVER_UNIT")
+-- nameplateEventHandler:SetScript("OnEvent", function(self, event, ...)
+--     return self[event](self, event, ...)
+-- end)
+
+-- local nonTargeAlpha = 0.4
+-- local mouseoverAlpha = 0.7
+
+-- function nameplateEventHandler:PLAYER_TARGET_CHANGED(event)
+--     -- print(event)
+--     local targetFrame = C_NamePlate.GetNamePlateForUnit("target")
+--     local mouseoverFrame = C_NamePlate.GetNamePlateForUnit("mouseover")
+--     local playerFrame = C_NamePlate.GetNamePlateForUnit("player")
+--     for _, frame in pairs(C_NamePlate.GetNamePlates()) do
+--         if frame == targetFrame or not UnitExists("target") or frame == playerFrame then
+--             if frame.unitFrame then
+--                 frame.unitFrame:SetAlpha(1)
+--             end
+--         elseif frame == mouseoverFrame and UnitExists("mouseover") then
+--             if frame.unitFrame then
+--                 frame.unitFrame:SetAlpha(mouseoverAlpha)
+--             end
+--         else
+--             if frame.unitFrame then
+--                 frame.unitFrame:SetAlpha(nonTargeAlpha)
+--             end
+-- 		end
+-- 	end
+-- end
+-- nameplateEventHandler.UPDATE_MOUSEOVER_UNIT = nameplateEventHandler.PLAYER_TARGET_CHANGED
+
+-- function ns.oUF_NugNameplatesOnTargetChanged(nameplate, event, unit)
+--     -- print(nameplate:GetName(), ...)
+-- end
+
+function ns.oUF_NugNameplates(self, unit)
+    if unit:match("nameplate") then
+
+        self.colors = colors
+        -- set size and points
+        
+
+        local texture = "Interface\\BUTTONS\\WHITE8X8"
+        local flat = "Interface\\BUTTONS\\WHITE8X8"
+        
+        local healthbar_width = 85
+        local healthbar_height = 7
+        local castbar_height = 9
+        local total_height = castbar_height + healthbar_height + 2
+
+
+        if not InCombatLockdown() then
+            local scale = UIParent:GetEffectiveScale()*1
+            C_NamePlate.SetNamePlateEnemySize(healthbar_width * scale, total_height * scale)
+        end
+        
+        self:SetSize(85, healthbar_height)
+        self:SetPoint("CENTER", 0, 0)
+
+        -- health bar
+        local health = CreateFrame("StatusBar", nil, self)
+        health:SetAllPoints()
+        health:SetStatusBarTexture(texture)
+        -- health:SetStatusBarTexture("Interface\\AddOns\\oUF_NugTarget\\castbar.tga")
+        health.colorHealth = true
+        health.colorTapping = true
+        -- health.colorDisconnected = true
+
+        health.bg = health:CreateTexture(nil, "BACKGROUND")
+        health.bg:SetAllPoints(health)
+        health.bg:SetTexture(texture)
+        health.bg.multiplier = 0.4
+        
+        self.Health = health
+
+        -- local healthborder = MakeBorder(health, flat, -1, -1, -1, -1, -2)
+        -- healthborder:SetVertexColor(0,0,0,1)
+        health:SetBackdrop({
+            bgFile = flat,
+            insets = { top = -1, right = -1, bottom= -1, left = -1 },
+        })
+        health:SetBackdropColor(0,0,0,1)
+
+        -- Frame background
+        
+        -- hbg:SetAllPoints()
+        -- hbg:SetColorTexture(0.2, 0.2, 0.2)
+
+
+
+        local castbar = CreateFrame("StatusBar", nil, self)
+        castbar:SetHeight(castbar_height)
+        castbar:SetPoint("TOPLEFT", health, "BOTTOMLEFT", 0, -2)
+        castbar:SetPoint("TOPRIGHT", health, "BOTTOMRIGHT", 0, -2)
+        castbar:SetStatusBarTexture(texture)
+        local r,g,b = 1, 0.5, 0
+        castbar:SetStatusBarColor(r,g,b)
+
+        local cbbg = castbar:CreateTexture(nil, "BACKGROUND")
+        cbbg:SetAllPoints()
+        cbbg:SetColorTexture(r*0.4, g*0.4, b*0.4)
+
+        -- local castbarborder = MakeBorder(castbar, flat, -1, -1, -1, -1, -2)
+        -- castbarborder:SetVertexColor(0,0,0,1)
+        castbar:SetBackdrop({
+            bgFile = flat,
+            insets = { top = -1, right = -1, bottom= -1, left = -1 },
+        })
+        castbar:SetBackdropColor(0,0,0,1)
+
+        local ict = castbar:CreateTexture(nil,"ARTWORK",nil,0)
+        ict:SetPoint("TOPRIGHT",health,"TOPLEFT", -3, 0)
+        ict:SetHeight(total_height)
+        ict:SetWidth(total_height * 8/6)
+        ict:SetTexCoord(.1, .9, .2, .8)
+
+        local iconborder = castbar:CreateTexture(nil,"BORDER",nil, -2)
+        iconborder:SetTexture(flat)
+        iconborder:SetPoint("TOPLEFT", ict, "TOPLEFT", -1, 1)
+        iconborder:SetPoint("BOTTOMRIGHT", ict, "BOTTOMRIGHT", 1, -1)
+        iconborder:SetVertexColor(0,0,0,1)
+
+        castbar.Icon = ict
+
+
+        local spellText = castbar:CreateFontString("");
+        spellText:SetFont(font3, 13, "OUTLINE")
+        spellText:SetWidth(80+total_height)
+        spellText:SetHeight(healthbar_height)
+        spellText:SetJustifyH("CENTER")
+        spellText:SetTextColor(1,1,1)
+        spellText:SetPoint("TOP", castbar, "BOTTOM",-1,0)
+        castbar.Text = spellText
+
+        
+
+
+        self.Castbar = castbar
+    end
+end
+
