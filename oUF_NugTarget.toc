@@ -3,6 +3,7 @@
 ## Version: 1
 ## Dependencies: oUF
 ## Notes: oUF layout
+## Version: @project-version@
 
 helpers.lua
 castbar.lua
