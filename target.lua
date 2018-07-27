@@ -845,7 +845,8 @@ end
 -- local mouseoverAlpha = 0.7
 
 -- function nameplateEventHandler:PLAYER_TARGET_CHANGED(event)
---     -- print(event)
+
+--     print(event)
 --     local targetFrame = C_NamePlate.GetNamePlateForUnit("target")
 --     local mouseoverFrame = C_NamePlate.GetNamePlateForUnit("mouseover")
 --     local playerFrame = C_NamePlate.GetNamePlateForUnit("player")
@@ -856,11 +857,12 @@ end
 --             end
 --         elseif frame == mouseoverFrame and UnitExists("mouseover") then
 --             if frame.unitFrame then
---                 frame.unitFrame:SetAlpha(mouseoverAlpha)
+--                 frame.unitFrame.Health.highlight:Show()
 --             end
 --         else
 --             if frame.unitFrame then
 --                 frame.unitFrame:SetAlpha(nonTargeAlpha)
+--                 frame.unitFrame.Health.highlight:Hide()
 --             end
 -- 		end
 -- 	end
@@ -910,6 +912,15 @@ function ns.oUF_NugNameplates(self, unit)
         health.bg.multiplier = 0.4
         
         self.Health = health
+
+
+        local hl = health:CreateTexture(nil, "OVERLAY")
+        hl:SetTexture(flat)
+        hl:SetVertexColor(1,1,1)
+        hl:SetBlendMode("ADD")
+        hl:SetAllPoints()
+        hl:Hide()
+        health.highlight = hl
 
         -- local healthborder = MakeBorder(health, flat, -1, -1, -1, -1, -2)
         -- healthborder:SetVertexColor(0,0,0,1)
