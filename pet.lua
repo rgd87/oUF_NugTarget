@@ -2,13 +2,13 @@ local addonName, ns = ...
 
 local colors = ns.colors
 
-function ns.oUF_NugGenericSmallFrame(addCastbar, colorClass)
+function ns.oUF_NugGenericSmallFrame(addCastbar, colorClass, addAltPower)
     return function(self, unit)
-        return ns.oUF_NugGenericSmallFrame1(self, unit, addCastbar, colorClass)
+        return ns.oUF_NugGenericSmallFrame1(self, unit, addCastbar, colorClass, addAltPower)
     end
 end
 
-function ns.oUF_NugGenericSmallFrame1(self, unit, addCastbar, colorClass)
+function ns.oUF_NugGenericSmallFrame1(self, unit, addCastbar, colorClass, addAltPower)
     local m=0.45
     -- local height = 100*m
     -- local width = 255*m
@@ -94,6 +94,38 @@ function ns.oUF_NugGenericSmallFrame1(self, unit, addCastbar, colorClass)
         castbar:SetPoint("TOPLEFT", self, "BOTTOMLEFT",10,1)
 
         self.Castbar = castbar
+    end
+
+
+    if addAltPower then
+        -- Position and size
+        local AlternativePower = CreateFrame('StatusBar', nil, self)
+        AlternativePower:SetHeight(10)
+        AlternativePower:SetWidth(90)
+
+        AlternativePower:EnableMouse(true)
+        local texture = [[Interface\AddOns\oUF_NugTarget\castbar.tga]]
+        -- local texture = "Interface\\BUTTONS\\WHITE8X8"
+        AlternativePower:SetStatusBarTexture(texture)
+        local color = {1,0.6,0.2}
+        local mul = 0.4
+        AlternativePower:SetStatusBarColor(unpack(color))
+
+        local bg = AlternativePower:CreateTexture(nil, "BACKGROUND")
+        bg:SetTexture(texture)
+        bg:SetVertexColor(color[1]*mul, color[2]*mul, color[3]*mul)
+        bg:SetAllPoints(AlternativePower)
+
+        local backdrop = {
+            bgFile = "Interface\\BUTTONS\\WHITE8X8", tile = true, tileSize = 0,
+            insets = {left = -2, right = -2, top = -2, bottom = -2},
+        }
+        AlternativePower:SetBackdrop(backdrop)
+        AlternativePower:SetBackdropColor(0, 0, 0, 0.5)
+
+        AlternativePower:SetPoint('TOPRIGHT', self, "LEFT",-5, 5)
+        -- Register with oUF
+        self.AlternativePower = AlternativePower
     end
     
 end

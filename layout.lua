@@ -42,7 +42,7 @@ pet:SetPoint("BOTTOMRIGHT", UIParent,"BOTTOMRIGHT",-150,100)
 -- oUF:SetActiveStyle"oUF_NugNameplates"
 -- oUF:SpawnNamePlates("oUF_Nameplate", ns.oUF_NugNameplatesOnTargetChanged)
 
-oUF:RegisterStyle("oUF_NugBossFrame", ns.oUF_NugGenericSmallFrame(true, false))
+oUF:RegisterStyle("oUF_NugBossFrame", ns.oUF_NugGenericSmallFrame(true, false, true))
 oUF:SetActiveStyle"oUF_NugBossFrame"
 for i=1,MAX_BOSS_FRAMES do
     local bossunit = "boss"..i
