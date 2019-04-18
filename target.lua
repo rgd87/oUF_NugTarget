@@ -370,8 +370,11 @@ function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
     sf:SetSize( hp:GetWidth(), hp:GetHeight())
     sf:SetPoint("LEFT", hp, "LEFT",0,0)
 
-    local ambientSmoke = MakeModelRegion(sf, hp:GetWidth(), hp:GetHeight(), "spells/acidburn_red.m2", -20, 0, -4.6 )
-    -- local ambientSmoke = MakeModelRegion(sf, hp:GetWidth(), hp:GetHeight(), "spells/7fx_ghost_red_state.m2",  3,0,1.2 )
+    -- [1249924] = "spells/7fx_ghost_red_state.m2"
+    -- [165539] = "spells/acidburn_red.m2"
+
+    local ambientSmoke = MakeModelRegion(sf, hp:GetWidth(), hp:GetHeight(), 165539, -20, 0, -4.6 )
+    -- local ambientSmoke = MakeModelRegion(sf, hp:GetWidth(), hp:GetHeight(), 1249924,  3,0,1.2 )
     -- ambientSmoke:SetAlpha(0.7)
     ambientSmoke:SetAllPoints(sf)
 
