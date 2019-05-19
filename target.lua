@@ -385,7 +385,7 @@ function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
     spark:SetTexture([[Interface\AddOns\oUF_NugTarget\vialSparkH.tga]])
     spark:SetSize(sparkWidth, height)
 
-    spark:SetPoint("CENTER", f, "TOP",0,0)
+    spark:SetPoint("CENTER", hp, "LEFT",0,0)
     spark:SetVertexColor(unpack(colors.health))
     hp.spark = spark
 
@@ -448,7 +448,7 @@ function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
     spark:SetTexture([[Interface\AddOns\oUF_NugTarget\vialSparkH.tga]])
     spark:SetSize(sparkWidth, mp_height)
 
-    spark:SetPoint("CENTER", f, "TOP",0,0)
+    spark:SetPoint("CENTER", mp, "LEFT",0,0)
     spark:SetVertexColor(unpack(colors.health))
     mp.spark = spark
 
