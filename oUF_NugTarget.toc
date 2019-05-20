@@ -5,6 +5,11 @@
 ## Notes: oUF layout
 ## Version: @project-version@
 
+Libs\LibStub\LibStub.lua
+Libs\CallbackHandler-1.0\CallbackHandler-1.0.lua
+Libs\LibSpellLocks-1.0\LibSpellLocks-1.0.lua
+Libs\LibAuraTypes-1.0\LibAuraTypes-1.0.lua
+
 helpers.lua
 castbar.lua
 target.lua

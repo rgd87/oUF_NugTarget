@@ -12,3 +12,13 @@ required-dependencies:
 ignore:
   - statusbar1.psd
   - README.md
+
+externals:
+  Libs/LibStub: svn://svn.wowace.com/wow/libstub/mainline/tags/1.0
+  Libs/CallbackHandler-1.0: https://repos.wowace.com/wow/ace3/trunk/CallbackHandler-1.0
+  Libs/LibSpellLocks-1.0:
+    url: https://github.com/rgd87/LibSpellLocks-1.0.git
+    tag: master
+  Libs/LibAuraTypes-1.0:
+    url: https://github.com/rgd87/LibAuraTypes-1.0.git
+    tag: master

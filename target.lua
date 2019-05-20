@@ -8,6 +8,9 @@ local font2 = [[Interface\AddOns\oUF_NugTarget\fonts\ClearFontBold.ttf]]
 local font3 = [[Interface\AddOns\oUF_NugTarget\fonts\ClearFont.ttf]]
 local font2size = 13
 
+local LibSpellLocks = LibStub("LibSpellLocks-1.0")
+local LibAuraTypes = LibStub("LibAuraTypes-1.0")
+
 oUF.Tags.Events["shorthp"] = "UNIT_HEALTH"
 oUF.Tags.Methods["shorthp"] = [[
 function(u)
@@ -318,6 +321,77 @@ function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
     portbg:SetTexture[[Interface\AddOns\oUF_NugTarget\target\portBG.tga]]
     portbg:SetPoint("TOPLEFT", port, "TOPLEFT", -1,0)
     portbg:SetPoint("BOTTOMRIGHT", port, "BOTTOMRIGHT", 0,0)
+
+    local portIconFrame = CreateFrame("Frame", nil, self)
+    local portIcon = portIconFrame:CreateTexture(nil,"ARTWORK")
+    portIcon:SetAllPoints()
+    portIcon:SetTexCoord(.1, .9, .1, .9)
+    portIconFrame.tex = portIcon
+
+    port:SetFrameStrata("BACKGROUND")
+
+    local picd = CreateFrame("Cooldown",nil, portIconFrame, "CooldownFrameTemplate")
+    picd.noCooldownCount = true -- disable OmniCC for this cooldown
+    picd:SetEdgeTexture("Interface\\Cooldown\\edge");
+    picd:SetSwipeColor(0, 0, 0);
+    picd:SetDrawEdge(false);
+    picd:SetHideCountdownNumbers(true);
+    picd:SetReverse(true)
+    picd:SetAllPoints(portIconFrame)
+    -- picd:SetFrameLevel(4)
+    portIconFrame.cd = picd
+
+    portIconFrame:SetAllPoints(port)
+    portIconFrame:SetFrameStrata("LOW")
+
+
+
+    portIconFrame:RegisterUnitEvent("UNIT_AURA", "target")
+    portIconFrame:RegisterEvent("PLAYER_TARGET_CHANGED")
+    portIconFrame.Update = function(self)
+        local unit = "target"
+        local maxPrio = 0
+        local maxPrioIndex = 1
+        for i=1,100 do
+            local name, icon, count, debuffType, duration, expirationTime, caster, _,_, spellID, canApplyAura, isBossAura = UnitAura(unit, i, "HARMFUL")
+            if not name then break end
+
+            local rootSpellID, spellType, prio = LibAuraTypes.GetDebuffInfo(spellID)
+            if prio and prio > maxPrio then
+                maxPrio = prio
+                maxPrioIndex = i
+            end
+        end
+        local isLocked = LibSpellLocks:GetSpellLockInfo(unit)
+        local PRIO_SILENCE = LibAuraTypes.GetDebuffTypePriority("SILENCE")
+        if isLocked and PRIO_SILENCE > maxPrio then
+            maxPrio = PRIO_SILENCE
+            maxPrioIndex = -1
+        end
+        if maxPrio >= PRIO_SILENCE then
+            local name, icon, _, _, duration, expirationTime, _, _,_, spellID
+            if maxPrioIndex == -1 then
+                spellID, name, icon, duration, expirationTime = LibSpellLocks:GetSpellLockInfo(unit)
+            else
+                name, icon, _, _, duration, expirationTime, _, _,_, spellID = UnitAura(unit, maxPrioIndex, "HARMFUL")
+            end
+            self.tex:SetTexture(icon)
+            self.cd:SetCooldown(expirationTime-duration, duration)
+            self:Show()
+        else
+            self:Hide()
+        end
+    end
+    
+    portIconFrame:SetScript("OnEvent", function(self, event, unit)
+        self:Update()
+    end)
+    LibSpellLocks.RegisterCallback(portIconFrame, "UPDATE_INTERRUPT", function(event, guid)
+        if UnitGUID("target") == guid then
+            portIconFrame:Update()
+        end
+    end)
+
     
     self.Portrait = port
     
@@ -332,7 +406,7 @@ function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
     local texture = [[Interface\AddOns\oUF_NugTarget\statusbar1.tga]]
 
     local hp = CreateFrame("StatusBar",nil,self)
-    hp:SetFrameStrata("LOW")
+    hp:SetFrameStrata("MEDIUM")
     hp:SetStatusBarTexture(texture)
     hp:GetStatusBarTexture():SetDrawLayer("ARTWORK",1)
     hp:SetHeight(height)
@@ -424,7 +498,7 @@ function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
     local mp_height = 10
 
     local mp = CreateFrame("StatusBar",nil,self)
-    mp:SetFrameStrata("LOW")
+    mp:SetFrameStrata("MEDIUM")
     mp:SetStatusBarTexture(texture)
     mp:GetStatusBarTexture():SetDrawLayer("ARTWORK",1)
     mp:SetHeight(mp_height)
