@@ -354,18 +354,23 @@ function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
 
     portIconFrame:RegisterUnitEvent("UNIT_AURA", "target")
     portIconFrame:RegisterEvent("PLAYER_TARGET_CHANGED")
+    local filters = { "HARMFUL", "HELPFUL" }
     portIconFrame.Update = function(self)
         local unit = "target"
         local maxPrio = 0
+        local maxPrioFilter
         local maxPrioIndex = 1
-        for i=1,100 do
-            local name, icon, count, debuffType, duration, expirationTime, caster, _,_, spellID, canApplyAura, isBossAura = UnitAura(unit, i, "HARMFUL")
-            if not name then break end
+        for _, filter in ipairs(filters) do
+            for i=1,100 do
+                local name, icon, count, debuffType, duration, expirationTime, caster, _,_, spellID, canApplyAura, isBossAura = UnitAura(unit, i, filter)
+                if not name then break end
 
-            local rootSpellID, spellType, prio = LibAuraTypes.GetDebuffInfo(spellID)
-            if prio and prio > maxPrio then
-                maxPrio = prio
-                maxPrioIndex = i
+                local rootSpellID, spellType, prio = LibAuraTypes.GetDebuffInfo(spellID)
+                if prio and prio > maxPrio then
+                    maxPrio = prio
+                    maxPrioIndex = i
+                    maxPrioFilter = filter
+                end
             end
         end
         local isLocked = LibSpellLocks:GetSpellLockInfo(unit)
@@ -379,7 +384,7 @@ function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
             if maxPrioIndex == -1 then
                 spellID, name, icon, duration, expirationTime = LibSpellLocks:GetSpellLockInfo(unit)
             else
-                name, icon, _, _, duration, expirationTime, _, _,_, spellID = UnitAura(unit, maxPrioIndex, "HARMFUL")
+                name, icon, _, _, duration, expirationTime, _, _,_, spellID = UnitAura(unit, maxPrioIndex, maxPrioFilter)
             end
             self.tex:SetTexture(icon)
             self.tex0:SetTexture(icon)
