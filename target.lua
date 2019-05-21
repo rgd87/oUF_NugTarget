@@ -323,15 +323,21 @@ function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
     portbg:SetPoint("BOTTOMRIGHT", port, "BOTTOMRIGHT", 0,0)
 
     local portIconFrame = CreateFrame("Frame", nil, self)
-    local portIcon = portIconFrame:CreateTexture(nil,"ARTWORK")
+    local portIcon = portIconFrame:CreateTexture(nil,"ARTWORK", nil, 2)
     portIcon:SetAllPoints()
     portIcon:SetTexCoord(.1, .9, .1, .9)
+    portIcon:SetAlpha(0.70)
     portIconFrame.tex = portIcon
+
+    local portIconDS = portIconFrame:CreateTexture(nil,"ARTWORK")
+    portIconDS:SetAllPoints()
+    portIconDS:SetTexCoord(.1, .9, .1, .9)
+    portIconFrame.tex0 = portIconDS
+    portIconDS:SetDesaturated(true)
 
     port:SetFrameStrata("BACKGROUND")
 
-    local picd = CreateFrame("Cooldown",nil, portIconFrame, "CooldownFrameTemplate")
-    picd.noCooldownCount = true -- disable OmniCC for this cooldown
+    local picd = CreateFrame("Cooldown", "oUF_NugTargetPortraitCooldown", portIconFrame, "CooldownFrameTemplate")
     picd:SetEdgeTexture("Interface\\Cooldown\\edge");
     picd:SetSwipeColor(0, 0, 0);
     picd:SetDrawEdge(false);
@@ -376,6 +382,7 @@ function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
                 name, icon, _, _, duration, expirationTime, _, _,_, spellID = UnitAura(unit, maxPrioIndex, "HARMFUL")
             end
             self.tex:SetTexture(icon)
+            self.tex0:SetTexture(icon)
             self.cd:SetCooldown(expirationTime-duration, duration)
             self:Show()
         else
