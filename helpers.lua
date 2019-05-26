@@ -6,7 +6,19 @@ frame:SetScript("OnEvent", function(self, event, ...)
 end)
 frame:RegisterEvent("SPELLS_CHANGED")
 
-local ranges = {
+local isClassic = select(4,GetBuildInfo()) <= 19999
+local GetSpecialization = isClassic and function() return 1 end or _G.GetSpecialization
+
+local ranges
+
+if isClassic then
+    ranges = {
+        WARRIOR = {
+            function() return 0.2 end,
+        },
+    }
+else
+ranges = {
     WARRIOR = {
         function() return IsPlayerSpell(281001) and 0.35 or 0.2 end, -- massacre
         function() return IsPlayerSpell(206315) and 0.35 or 0.2 end, -- fury massacre
@@ -28,6 +40,9 @@ local ranges = {
         function() return IsPlayerSpell(260228) and 0.30 end, -- Careful Aim
     }
 }
+end
+
+
 function frame:SPELLS_CHANGED()
     local class = select(2, UnitClass("player"))
     local spec = GetSpecialization()
