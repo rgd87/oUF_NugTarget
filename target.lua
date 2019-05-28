@@ -11,6 +11,8 @@ local font2size = 13
 local LibSpellLocks = LibStub("LibSpellLocks-1.0")
 local LibAuraTypes = LibStub("LibAuraTypes-1.0")
 
+local isClassic = select(4,GetBuildInfo()) <= 19999
+
 oUF.Tags.Events["shorthp"] = "UNIT_HEALTH"
 oUF.Tags.Methods["shorthp"] = [[
 function(u)
@@ -456,10 +458,12 @@ function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
     -- [1249924] = "spells/7fx_ghost_red_state.m2"
     -- [165539] = "spells/acidburn_red.m2"
 
-    local ambientSmoke = MakeModelRegion(sf, hp:GetWidth(), hp:GetHeight(), 165539, -20, 0, -4.6 )
-    -- local ambientSmoke = MakeModelRegion(sf, hp:GetWidth(), hp:GetHeight(), 1249924,  3,0,1.2 )
-    -- ambientSmoke:SetAlpha(0.7)
-    ambientSmoke:SetAllPoints(sf)
+    if not isClassic then
+        local ambientSmoke = MakeModelRegion(sf, hp:GetWidth(), hp:GetHeight(), 165539, -20, 0, -4.6 )
+        -- local ambientSmoke = MakeModelRegion(sf, hp:GetWidth(), hp:GetHeight(), 1249924,  3,0,1.2 )
+        -- ambientSmoke:SetAlpha(0.7)
+        ambientSmoke:SetAllPoints(sf)
+    end
 
     sf:SetScrollChild(ambientSmoke)
     
@@ -611,7 +615,7 @@ function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
 
 
     --==< THREAT BAR >==--
-    if unit == "target" then
+    if not isClassic and unit == "target" then
         local threatp = self.Portrait:CreateFontString(nil, "OVERLAY", self)
         threatp:SetFont(font1,font1size,"OUTLINE")
         threatp:SetJustifyH"LEFT"

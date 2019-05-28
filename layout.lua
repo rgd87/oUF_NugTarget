@@ -6,17 +6,20 @@ local focusCastbar = true
 local petCastbar = false
 
 
+local isClassic = select(4,GetBuildInfo()) <= 19999
+
 oUF:RegisterStyle("oUF_NugTargetFrame", ns.oUF_NugTargetFrame(targetCastbar))
 oUF:SetActiveStyle("oUF_NugTargetFrame")
 local target = oUF:Spawn("target","oUF_Target")
 target:SetPoint("LEFT", UIParent, "CENTER", 230, -70)
 
 
+if not isClassic then
 oUF:RegisterStyle("oUF_NugFocusFrame", ns.oUF_NugTargetFrame(focusCastbar))
 oUF:SetActiveStyle("oUF_NugFocusFrame")
 local focus = oUF:Spawn("focus","oUF_Focus")
 focus:SetPoint("LEFT", UIParent, "CENTER", 230, 140)
-
+end
 
 
 oUF:RegisterStyle("oUF_NugTargetTargetFrame", ns.oUF_NugTargetTargetFrame)
@@ -42,6 +45,8 @@ pet:SetPoint("BOTTOMRIGHT", UIParent,"BOTTOMRIGHT",-150,100)
 -- oUF:SetActiveStyle"oUF_NugNameplates"
 -- oUF:SpawnNamePlates("oUF_Nameplate", ns.oUF_NugNameplatesOnTargetChanged)
 
+if not isClassic then
+
 oUF:RegisterStyle("oUF_NugBossFrame", ns.oUF_NugGenericSmallFrame(true, false, true))
 oUF:SetActiveStyle"oUF_NugBossFrame"
 for i=1,MAX_BOSS_FRAMES do
@@ -49,3 +54,4 @@ for i=1,MAX_BOSS_FRAMES do
     oUF:Spawn(bossunit,"oUF_Boss"..i):SetPoint("TOPRIGHT", UIParent, "TOPRIGHT", -15, -220 - 90*(i-1) )
 end
 
+end
