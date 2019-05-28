@@ -785,7 +785,7 @@ function ns.oUF_NugTargetTargetFrame(self, unit)
     local texture = [[Interface\AddOns\oUF_NugTarget\statusbar1.tga]]
 
     local hp = CreateFrame("StatusBar",nil,self)
-    -- hp:SetFrameStrata("LOW")
+    hp:SetFrameStrata("MEDIUM")
     hp:SetStatusBarTexture(texture)
     hp:GetStatusBarTexture():SetDrawLayer("ARTWORK",1)
     hp:SetHeight(height)
