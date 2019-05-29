@@ -458,8 +458,14 @@ function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
     -- [1249924] = "spells/7fx_ghost_red_state.m2"
     -- [165539] = "spells/acidburn_red.m2"
 
-    if not isClassic then
-        local ambientSmoke = MakeModelRegion(sf, hp:GetWidth(), hp:GetHeight(), 165539, -20, 0, -4.6 )
+    local ambientSmoke
+    if  isClassic then
+        ambientSmoke = MakeModelRegion(sf, hp:GetWidth(), hp:GetHeight(), "spells/redghost_state.m2", 0, -0, 0 )
+        -- local ambientSmoke2 = MakeModelRegion(sf, hp:GetWidth(), hp:GetHeight(), "spells/redghost_state.m2", 0, 0.4, 0 )
+        ambientSmoke:SetAllPoints(sf)
+        -- ambientSmoke2:SetAllPoints(sf)
+    else
+        ambientSmoke = MakeModelRegion(sf, hp:GetWidth(), hp:GetHeight(), 165539, -20, 0, -4.6 )
         -- local ambientSmoke = MakeModelRegion(sf, hp:GetWidth(), hp:GetHeight(), 1249924,  3,0,1.2 )
         -- ambientSmoke:SetAlpha(0.7)
         ambientSmoke:SetAllPoints(sf)
@@ -738,6 +744,7 @@ function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
     leader:SetTextColor(0, 1, 0)
     leader:SetPoint("BOTTOMRIGHT",self.Info,"TOPRIGHT",0,3)
     leader:SetText("LDR")
+    leader:Hide()
     self.Leader = leader
     
     --==< RAID ICON >==--
