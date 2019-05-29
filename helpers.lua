@@ -14,7 +14,7 @@ local ranges
 if isClassic then
     ranges = {
         WARRIOR = {
-            function() return 0.2 end,
+            function() return IsPlayerSpell(5308) and 0.2 end,
         },
     }
 else
