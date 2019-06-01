@@ -459,12 +459,13 @@ function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
     -- [165539] = "spells/acidburn_red.m2"
 
     local ambientSmoke
-    if  isClassic then
-        ambientSmoke = MakeModelRegion(sf, hp:GetWidth(), hp:GetHeight(), "spells/redghost_state.m2", 0, -0, 0 )
+    if not isClassic then
+        -- ambientSmoke = MakeModelRegion(sf, hp:GetWidth(), hp:GetHeight(), "spells/redghost_state.m2", 0, -0, 0 )
+        -- ambientSmoke:SetFrameLevel(5)
         -- local ambientSmoke2 = MakeModelRegion(sf, hp:GetWidth(), hp:GetHeight(), "spells/redghost_state.m2", 0, 0.4, 0 )
-        ambientSmoke:SetAllPoints(sf)
+        -- ambientSmoke:SetAllPoints(sf)
         -- ambientSmoke2:SetAllPoints(sf)
-    else
+    -- else
         ambientSmoke = MakeModelRegion(sf, hp:GetWidth(), hp:GetHeight(), 165539, -20, 0, -4.6 )
         -- local ambientSmoke = MakeModelRegion(sf, hp:GetWidth(), hp:GetHeight(), 1249924,  3,0,1.2 )
         -- ambientSmoke:SetAlpha(0.7)

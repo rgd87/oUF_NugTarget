@@ -12,9 +12,17 @@ local GetSpecialization = isClassic and function() return 1 end or _G.GetSpecial
 local ranges
 
 if isClassic then
+    local IsAnySpellKnown = function (...)
+        for i=1, select("#", ...) do
+            local spellID = select(i, ...)
+            if not spellID then break end
+            if IsPlayerSpell(spellID) then return spellID end
+        end
+    end
+    
     ranges = {
         WARRIOR = {
-            function() return IsPlayerSpell(5308) and 0.2 end,
+            function() return IsAnySpellKnown(20662, 20661, 20660, 20658, 5308) and 0.2 end,
         },
     }
 else
