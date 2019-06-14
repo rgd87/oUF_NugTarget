@@ -8,8 +8,8 @@ local font2 = [[Interface\AddOns\oUF_NugTarget\fonts\ClearFontBold.ttf]]
 local font3 = [[Interface\AddOns\oUF_NugTarget\fonts\ClearFont.ttf]]
 local font2size = 13
 
-local LibSpellLocks = LibStub("LibSpellLocks-1.0")
-local LibAuraTypes = LibStub("LibAuraTypes-1.0")
+local LibSpellLocks = LibStub("LibSpellLocks")
+local LibAuraTypes = LibStub("LibAuraTypes")
 
 local isClassic = select(4,GetBuildInfo()) <= 19999
 
@@ -88,7 +88,7 @@ end
 
 local UnitIsTapDenied = UnitIsTapDenied
 local UnitIsEnemy = UnitIsEnemy
-local UnitIsFriend = UnitIsFriend 
+local UnitIsFriend = UnitIsFriend
 local PostUpdateHealth = function(self, unit, cur, max)
     local health = self
     local self = health:GetParent()
@@ -230,7 +230,7 @@ end
 --     f:SetWidth(width)
 --     f:SetHeight(height)
 --     f:SetMinMaxValues(0,1)
-    
+
 --     local backdrop = {
 --         bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", tile = true, tileSize = 0,
 --         insets = {left = -2, right = -2, top = -2, bottom = -2},
@@ -238,7 +238,7 @@ end
 --     f:SetBackdrop(backdrop)
 --     f:SetBackdropColor(0,0,0,0.65)
 --     f:SetStatusBarTexture(tex)
-    
+
 --     local bg = f:CreateTexture(nil,"BACKGROUND")
 --     bg:SetTexture(tex)
 --     bg:SetAllPoints(f)
@@ -270,7 +270,7 @@ end
 --                 return
 --             end
 --         end
---         self:Hide() 
+--         self:Hide()
 --     end)
 
 --     return f
@@ -309,7 +309,7 @@ function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
     self:SetScript("OnEnter", CustomOnEnter)
     self:SetScript("OnLeave", CustomOnLeave)
 
-	self:RegisterForClicks"anyup"    
+	self:RegisterForClicks"anyup"
 
     local port = CreateFrame("PlayerModel",nil,self)
     local portsize = 64
@@ -396,7 +396,7 @@ function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
             self:Hide()
         end
     end
-    
+
     portIconFrame:SetScript("OnEvent", function(self, event, unit)
         self:Update()
     end)
@@ -406,10 +406,10 @@ function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
         end
     end)
 
-    
+
     self.Portrait = port
-    
-    
+
+
 
     local height = 25
     local width = 183
@@ -431,15 +431,15 @@ function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
     hp.colorDisconnected = true
     hp.frequentUpdates = true
     hp.colorHealth = true
-    hp.Smooth = true    
+    hp.Smooth = true
 
     hp.bg = hp:CreateTexture(nil, "BORDER")
     hp.bg:SetAllPoints(hp)
     hp.bg:SetTexture(texture)
     hp.bg.multiplier = 0.4
 
-    
-    
+
+
 
 
     local sf = CreateFrame("ScrollFrame", nil, hp)
@@ -473,7 +473,7 @@ function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
     end
 
     sf:SetScrollChild(ambientSmoke)
-    
+
     hp.model = sf
 
 
@@ -513,8 +513,8 @@ function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
         self.model:SetMinMaxValues(min,max)
         return OriginalSetMinMaxValues(self, min, max)
     end
-    
-    
+
+
     self.Health = hp
     self.Health.PostUpdate = PostUpdateHealth
 
@@ -573,7 +573,7 @@ function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
 
     self.Power = mp
 
-    
+
     local bg = hp:CreateTexture(nil,"ARTWORK", nil, 7)
     bg:SetPoint("TOPLEFT", self, "TOPLEFT",0,0)
     bg:SetWidth(307)
@@ -586,8 +586,8 @@ function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
 
 
     --==< HEALTH BAR TEXT >==--
-    
-    
+
+
     local hppp = self.Portrait:CreateFontString(nil, "OVERLAY", self)
     hppp:SetFont(font1,font1size,"OUTLINE")
     hppp:SetJustifyH"LEFT"
@@ -613,9 +613,9 @@ function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
     info:SetFont(font1,font1size,"OUTLINE")
     info:SetJustifyH"RIGHT"
     info:SetTextColor(0, 1, 0)
-    
+
     self:Tag(info, 'L[difficulty][level]')
-    
+
     info:SetPoint("BOTTOMRIGHT", self.Portrait, "BOTTOMRIGHT", 1, 1)
 
     self.Info = info
@@ -653,13 +653,13 @@ function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
     name:SetJustifyH"LEFT"
     name:SetTextColor(0,1,0)
     self:Tag(name, '[raidcolor][name]')
-    
-    
+
+
     -- name:SetHeight(height)
     name:SetPoint("LEFT",self.Health,"LEFT",10,0)
     name:SetPoint("RIGHT",self.Health,"RIGHT",-10,0)
     name:Hide()
-                
+
     self.Name = name
 
     --==< AURAS >==--
@@ -683,7 +683,7 @@ function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
             overlay.Hide = overlay.Show
         end
     end
-    
+
     local buffs = CreateFrame("Frame", "$parentBuffs", self)
     buffs:SetPoint("TOPLEFT", self, "TOPRIGHT",-5,-10)
     buffs:SetHeight(24)
@@ -704,7 +704,7 @@ function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
     debuffs:SetWidth(150)
     debuffs.num = 16
     debuffs.PostCreateIcon = PostCreate
-    
+
     debuffs.PostUpdateIcon = function(icons, unit, icon, index, offset)
         if icon.caster == "player" or icon.caster == "pet" or UnitIsFriend("player", unit) then
             icon:SetAlpha(1)
@@ -714,9 +714,9 @@ function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
             -- icon.icon:SetDesaturated(1)
             icon:SetAlpha(.5)
             -- icon:SetSize(28,28)
-        end       
+        end
     end
-    
+
     debuffs.showDebuffType = true
     debuffs.initialAnchor = "TOPLEFT"
     debuffs["growth-x"] = "RIGHT"
@@ -725,7 +725,7 @@ function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
 
     self.Debuffs = debuffs
 
-    if addCastbar then        
+    if addCastbar then
         local cw,ch = 207, 18
         local castbar = ns:CreateCastbar(self, cw, ch, true)
         castbar:SetColor(0.6, 0, 1)
@@ -737,7 +737,7 @@ function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
     end
 
 
-    
+
     --==< LEADER ICON >==--
     local leader = self:CreateFontString(nil, "OVERLAY", self)
     leader:SetFont(font1,font1size+1,"OUTLINE")
@@ -747,7 +747,7 @@ function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
     leader:SetText("LDR")
     leader:Hide()
     self.Leader = leader
-    
+
     --==< RAID ICON >==--
     local raidicon = self.Portrait:CreateTexture(nil, "OVERLAY")
     raidicon:SetHeight(20)
@@ -755,8 +755,8 @@ function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
     -- raidicon:SetTexture("Interface\\TargetingFrame\\UI-RaidTargetingIcons")
     raidicon:SetPoint("TOPRIGHT",self.Portrait, "TOPRIGHT",0,0)
     self.RaidTargetIndicator = raidicon
-    
-    
+
+
     self:EnableMouse(true)
     -- self:RegisterForDrag("LeftButton")
     -- self:SetMovable(true)
@@ -775,21 +775,21 @@ function ns.oUF_NugTargetTargetFrame(self, unit)
     local height = 88 * 0.52
     self:SetHeight(height)
     self:SetWidth(width)
-    
+
     self.colors = colors
 
 
 	self:SetScript("OnEnter", UnitFrame_OnEnter)
 	self:SetScript("OnLeave", UnitFrame_OnLeave)
-    
+
  	self:RegisterForClicks"anyup"
     -- self:SetAttribute("*type2", "menu")
 
 
-    
+
     self:SetFrameLevel(7)
-    
-    
+
+
     local width = 112
     local height = 15
 
@@ -816,17 +816,17 @@ function ns.oUF_NugTargetTargetFrame(self, unit)
     hp.bg.multiplier = 0.4
 
     -- hp.model = CreateFrame("Frame")
-    
+
     self.Health = hp
     -- self.Health.PostUpdate = PostUpdateHealth
-    
-    
+
+
     local bg = hp:CreateTexture(nil,"ARTWORK")
     bg:SetDrawLayer("ARTWORK", 7)
     bg:SetAllPoints(self)
     bg:SetTexture[[Interface\AddOns\oUF_NugTarget\target\totBG]]
     bg:SetTexCoord(0,1,0,88/128)
-    
+
      --==< NAME TEXT >==--
     local name = hp:CreateFontString(nil, "OVERLAY", self.Health)
     name:SetFont(font2,font2size-2)
@@ -834,10 +834,10 @@ function ns.oUF_NugTargetTargetFrame(self, unit)
     name:SetJustifyH"LEFT"
     name:SetTextColor(1,1,1, 0.35)
     self:Tag(name, '[name]')
-    
+
     name:SetPoint("TOPLEFT",self.Health,"TOPLEFT",7,0)
     name:SetPoint("BOTTOMRIGHT",self.Health,"BOTTOMRIGHT",-5,0)
-    
+
     self.Name = name
 
 
@@ -931,158 +931,4 @@ local MakeBorder = function(self, tex, left, right, top, bottom, level)
 end
 
 
-
--- local nameplateEventHandler = CreateFrame("Frame", nil, UIParent)
--- nameplateEventHandler:RegisterEvent("PLAYER_TARGET_CHANGED")
--- nameplateEventHandler:RegisterEvent("UPDATE_MOUSEOVER_UNIT")
--- nameplateEventHandler:SetScript("OnEvent", function(self, event, ...)
---     return self[event](self, event, ...)
--- end)
-
--- local nonTargeAlpha = 0.4
--- local mouseoverAlpha = 0.7
-
--- function nameplateEventHandler:PLAYER_TARGET_CHANGED(event)
-
---     print(event)
---     local targetFrame = C_NamePlate.GetNamePlateForUnit("target")
---     local mouseoverFrame = C_NamePlate.GetNamePlateForUnit("mouseover")
---     local playerFrame = C_NamePlate.GetNamePlateForUnit("player")
---     for _, frame in pairs(C_NamePlate.GetNamePlates()) do
---         if frame == targetFrame or not UnitExists("target") or frame == playerFrame then
---             if frame.unitFrame then
---                 frame.unitFrame:SetAlpha(1)
---             end
---         elseif frame == mouseoverFrame and UnitExists("mouseover") then
---             if frame.unitFrame then
---                 frame.unitFrame.Health.highlight:Show()
---             end
---         else
---             if frame.unitFrame then
---                 frame.unitFrame:SetAlpha(nonTargeAlpha)
---                 frame.unitFrame.Health.highlight:Hide()
---             end
--- 		end
--- 	end
--- end
--- nameplateEventHandler.UPDATE_MOUSEOVER_UNIT = nameplateEventHandler.PLAYER_TARGET_CHANGED
-
--- function ns.oUF_NugNameplatesOnTargetChanged(nameplate, event, unit)
---     -- print(nameplate:GetName(), ...)
--- end
-
-function ns.oUF_NugNameplates(self, unit)
-    if unit:match("nameplate") then
-
-        self.colors = colors
-        -- set size and points
-        
-
-        local texture = "Interface\\BUTTONS\\WHITE8X8"
-        local flat = "Interface\\BUTTONS\\WHITE8X8"
-        
-        local healthbar_width = 85
-        local healthbar_height = 7
-        local castbar_height = 9
-        local total_height = castbar_height + healthbar_height + 2
-
-
-        if not InCombatLockdown() then
-            local scale = UIParent:GetEffectiveScale()*1
-            C_NamePlate.SetNamePlateEnemySize(healthbar_width * scale, total_height * scale)
-        end
-        
-        self:SetSize(85, healthbar_height)
-        self:SetPoint("CENTER", 0, 0)
-
-        -- health bar
-        local health = CreateFrame("StatusBar", nil, self)
-        health:SetAllPoints()
-        health:SetStatusBarTexture(texture)
-        -- health:SetStatusBarTexture("Interface\\AddOns\\oUF_NugTarget\\castbar.tga")
-        health.colorHealth = true
-        health.colorTapping = true
-        -- health.colorDisconnected = true
-
-        health.bg = health:CreateTexture(nil, "BACKGROUND")
-        health.bg:SetAllPoints(health)
-        health.bg:SetTexture(texture)
-        health.bg.multiplier = 0.4
-        
-        self.Health = health
-
-
-        local hl = health:CreateTexture(nil, "OVERLAY")
-        hl:SetTexture(flat)
-        hl:SetVertexColor(1,1,1)
-        hl:SetBlendMode("ADD")
-        hl:SetAllPoints()
-        hl:Hide()
-        health.highlight = hl
-
-        -- local healthborder = MakeBorder(health, flat, -1, -1, -1, -1, -2)
-        -- healthborder:SetVertexColor(0,0,0,1)
-        health:SetBackdrop({
-            bgFile = flat,
-            insets = { top = -1, right = -1, bottom= -1, left = -1 },
-        })
-        health:SetBackdropColor(0,0,0,1)
-
-        -- Frame background
-        
-        -- hbg:SetAllPoints()
-        -- hbg:SetColorTexture(0.2, 0.2, 0.2)
-
-
-
-        local castbar = CreateFrame("StatusBar", nil, self)
-        castbar:SetHeight(castbar_height)
-        castbar:SetPoint("TOPLEFT", health, "BOTTOMLEFT", 0, -2)
-        castbar:SetPoint("TOPRIGHT", health, "BOTTOMRIGHT", 0, -2)
-        castbar:SetStatusBarTexture(texture)
-        local r,g,b = 1, 0.5, 0
-        castbar:SetStatusBarColor(r,g,b)
-
-        local cbbg = castbar:CreateTexture(nil, "BACKGROUND")
-        cbbg:SetAllPoints()
-        cbbg:SetColorTexture(r*0.4, g*0.4, b*0.4)
-
-        -- local castbarborder = MakeBorder(castbar, flat, -1, -1, -1, -1, -2)
-        -- castbarborder:SetVertexColor(0,0,0,1)
-        castbar:SetBackdrop({
-            bgFile = flat,
-            insets = { top = -1, right = -1, bottom= -1, left = -1 },
-        })
-        castbar:SetBackdropColor(0,0,0,1)
-
-        local ict = castbar:CreateTexture(nil,"ARTWORK",nil,0)
-        ict:SetPoint("TOPRIGHT",health,"TOPLEFT", -3, 0)
-        ict:SetHeight(total_height)
-        ict:SetWidth(total_height * 8/6)
-        ict:SetTexCoord(.1, .9, .2, .8)
-
-        local iconborder = castbar:CreateTexture(nil,"BORDER",nil, -2)
-        iconborder:SetTexture(flat)
-        iconborder:SetPoint("TOPLEFT", ict, "TOPLEFT", -1, 1)
-        iconborder:SetPoint("BOTTOMRIGHT", ict, "BOTTOMRIGHT", 1, -1)
-        iconborder:SetVertexColor(0,0,0,1)
-
-        castbar.Icon = ict
-
-
-        local spellText = castbar:CreateFontString("");
-        spellText:SetFont(font3, 13, "OUTLINE")
-        spellText:SetWidth(80+total_height)
-        spellText:SetHeight(healthbar_height)
-        spellText:SetJustifyH("CENTER")
-        spellText:SetTextColor(1,1,1)
-        spellText:SetPoint("TOP", castbar, "BOTTOM",-1,0)
-        castbar.Text = spellText
-
-        
-
-
-        self.Castbar = castbar
-    end
-end
 

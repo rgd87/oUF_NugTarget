@@ -19,7 +19,7 @@ if isClassic then
             if IsPlayerSpell(spellID) then return spellID end
         end
     end
-    
+
     ranges = {
         WARRIOR = {
             function() return IsAnySpellKnown(20662, 20661, 20660, 20658, 5308) and 0.2 end,

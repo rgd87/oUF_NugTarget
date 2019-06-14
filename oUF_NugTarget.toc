@@ -7,8 +7,8 @@
 
 Libs\LibStub\LibStub.lua
 Libs\CallbackHandler-1.0\CallbackHandler-1.0.lua
-Libs\LibSpellLocks-1.0\LibSpellLocks-1.0.lua
-Libs\LibAuraTypes-1.0\LibAuraTypes-1.0.lua
+Libs\LibSpellLocks\LibSpellLocks.lua
+Libs\LibAuraTypes\LibAuraTypes.lua
 
 helpers.lua
 castbar.lua

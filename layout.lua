@@ -41,10 +41,6 @@ local pet = oUF:Spawn("pet","oUF_Pet")
 pet:SetPoint("BOTTOMRIGHT", UIParent,"BOTTOMRIGHT",-150,100)
 
 
--- oUF:RegisterStyle("oUF_NugNameplates", ns.oUF_NugNameplates)
--- oUF:SetActiveStyle"oUF_NugNameplates"
--- oUF:SpawnNamePlates("oUF_Nameplate", ns.oUF_NugNameplatesOnTargetChanged)
-
 if not isClassic then
 
 oUF:RegisterStyle("oUF_NugBossFrame", ns.oUF_NugGenericSmallFrame(true, false, true))
