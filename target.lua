@@ -429,7 +429,7 @@ function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
 
     hp.colorTapping = true
     hp.colorDisconnected = true
-    hp.frequentUpdates = true
+    -- hp.frequentUpdates = true
     hp.colorHealth = true
     hp.Smooth = true
 

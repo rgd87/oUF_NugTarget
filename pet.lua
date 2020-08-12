@@ -22,9 +22,9 @@ function ns.oUF_NugGenericSmallFrame1(self, unit, addCastbar, colorClass, addAlt
 
 	self:RegisterForClicks"anyup"
 	-- self:SetAttribute("*type2", nil) -- disable right click
-    
+
     self.colors = colors
-    
+
     local hpw = 97
     local hph = 17
 
@@ -42,7 +42,7 @@ function ns.oUF_NugGenericSmallFrame1(self, unit, addCastbar, colorClass, addAlt
     hp.colorDisconnected = true
     hp.colorHealth = true
     hp.colorClass = colorClass
-    hp.frequentUpdates = true
+    -- hp.frequentUpdates = true
     -- hp.Smooth = true
 
     hp.bg = hp:CreateTexture(nil, "BORDER")
@@ -51,7 +51,7 @@ function ns.oUF_NugGenericSmallFrame1(self, unit, addCastbar, colorClass, addAlt
     hp.bg.multiplier = 0.4
 
     -- hp.model = CreateFrame("Frame")
-    
+
     self.Health = hp
 
     local mph = 9
@@ -86,7 +86,7 @@ function ns.oUF_NugGenericSmallFrame1(self, unit, addCastbar, colorClass, addAlt
     bg:SetTexture[[Interface\AddOns\oUF_NugTarget\target\petBG]]
     bg:SetTexCoord(0, 278/512, 0, 0.95)
 
-    if addCastbar then        
+    if addCastbar then
         local cw,ch = 155, 18
         local castbar = ns:CreateCastbar(self, cw, ch, true)
         castbar:SetColor(0.6, 0, 1)
@@ -99,7 +99,7 @@ function ns.oUF_NugGenericSmallFrame1(self, unit, addCastbar, colorClass, addAlt
 
     if addAltPower then
         -- Position and size
-        local AlternativePower = CreateFrame('StatusBar', nil, self)
+        local AlternativePower = CreateFrame('StatusBar', nil, self, BackdropTemplateMixin and "BackdropTemplate")
         AlternativePower:SetHeight(10)
         AlternativePower:SetWidth(90)
 
@@ -127,5 +127,5 @@ function ns.oUF_NugGenericSmallFrame1(self, unit, addCastbar, colorClass, addAlt
         -- Register with oUF
         self.AlternativePower = AlternativePower
     end
-    
+
 end
