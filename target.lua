@@ -359,6 +359,9 @@ function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
     local filters = { "HARMFUL", "HELPFUL" }
     portIconFrame.Update = function(self)
         local unit = "target"
+        if not UnitIsPlayer(unit) then
+            self:Hide()
+        end
         local maxPrio = 0
         local maxPrioFilter
         local maxPrioIndex = 1
