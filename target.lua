@@ -80,10 +80,10 @@ ns.colors = colors
 
 
 
-local execute_range
+local IsInExecuteRange
 
 function ns.UpdateExecute(new_execute)
-    execute_range = new_execute
+    IsInExecuteRange = new_execute
 end
 
 local UnitIsTapDenied = UnitIsTapDenied
@@ -112,7 +112,7 @@ local PostUpdateHealth = function(self, unit, cur, max)
     --     health.model:SetAlpha(1)
     -- elseif(health.colorSmooth) then
     --     r, g, b = self.ColorGradient(min, max, unpack(health.smoothGradient or self.colors.smooth))
-    elseif execute_range and cur/max < execute_range then
+    elseif IsInExecuteRange and IsInExecuteRange(cur/max, unit, cur, max) then
         t = self.colors.execute
         health.model:SetAlpha(1)
     elseif(health.colorHealth) then
