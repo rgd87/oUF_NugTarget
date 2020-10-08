@@ -21,20 +21,20 @@ function ns.CreateCastbar(self, parent, _width, _height, spark)
     -- }
     -- bar:SetBackdrop(backdrop)
     -- bar:SetBackdropColor(0, 0, 0, 0.7)
-    
+
     local backdrop = bar:CreateTexture(nil, "BACKGROUND", nil, 0)
     backdrop:SetTexture("Interface\\Tooltips\\UI-Tooltip-Background")
     backdrop:SetVertexColor(0,0,0,0.7)
     backdrop:SetPoint("TOPLEFT", bar, "TOPLEFT", -3-height, 2)
     backdrop:SetPoint("BOTTOMRIGHT", bar, "BOTTOMRIGHT", 2, -2)
 
-   
+
     local ict = bar:CreateTexture(nil,"ARTWORK",nil,0)
     ict:SetPoint("TOPRIGHT",bar,"TOPLEFT", -1, 0)
     ict:SetWidth(height)
     ict:SetHeight(height)
     ict:SetTexCoord(.07, .93, .07, .93)
-    bar.Icon = ict    
+    bar.Icon = ict
 
     if spark then
         self:CastbarAddSpark(bar)
@@ -51,7 +51,7 @@ function ns.CreateCastbar(self, parent, _width, _height, spark)
 	bar.bg:SetAllPoints(bar)
     bar.bg:SetTexture(texture)
 
-    local font = [[Interface\AddOns\oUF_NugTarget\fonts\ClearFont.ttf]]
+    local font = [[Interface\AddOns\oUF_NugTarget\fonts\AlegreyaSans-Medium.ttf]]
     local textColor = {1,1,1, 0.6}
     local timeFont = font
     local timeFontSize = 10

@@ -4,8 +4,8 @@ local font1 = [[Interface\AddOns\oUF_NugTarget\fonts\iFlash 706.TTF]]
 local font1size = 8
 --~ local font2 = [[Interface\AddOns\oUF_NugTarget\fonts\Unvers.TTF]]
 --~ local font2 = [[Interface\AddOns\oUF_NugTarget\fonts\iFlash 706.TTF]]
-local font2 = [[Interface\AddOns\oUF_NugTarget\fonts\ClearFontBold.ttf]]
-local font3 = [[Interface\AddOns\oUF_NugTarget\fonts\ClearFont.ttf]]
+local font2 = [[Interface\AddOns\oUF_NugTarget\fonts\AlegreyaSans-Medium.ttf]]
+local font3 = [[Interface\AddOns\oUF_NugTarget\fonts\AlegreyaSans-Medium.ttf]]
 local font2size = 13
 
 local LibSpellLocks = LibStub("LibSpellLocks")
