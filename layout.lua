@@ -11,7 +11,10 @@ local isClassic = select(4,GetBuildInfo()) <= 19999
 oUF:RegisterStyle("oUF_NugTargetFrame", ns.oUF_NugTargetFrame(targetCastbar))
 oUF:SetActiveStyle("oUF_NugTargetFrame")
 local target = oUF:Spawn("target","oUF_Target")
-target:SetPoint("LEFT", UIParent, "CENTER", 230, -70)
+-- target:SetPoint("LEFT", UIParent, "CENTER", 230, -70)
+-- target:SetPoint("LEFT", UIParent, "CENTER", 332, -81) -- 0.8
+target:SetPoint("LEFT", UIParent, "CENTER", 305, -81) -- 0.85
+target:SetScale(0.85)
 
 
 if not isClassic then
@@ -25,7 +28,9 @@ end
 oUF:RegisterStyle("oUF_NugTargetTargetFrame", ns.oUF_NugTargetTargetFrame)
 oUF:SetActiveStyle("oUF_NugTargetTargetFrame")
 local targettarget = oUF:Spawn("targettarget","oUF_TargetTarget")
-targettarget:SetPoint("BOTTOM",target,"TOP",61,-15)
+-- targettarget:SetPoint("BOTTOM",target,"TOP",61,-15)
+targettarget:SetPoint("BOTTOM",target,"TOP",55,-15)
+targettarget:SetScale(0.9)
 
 if createFocusTarget then
     local focustarget = oUF:Spawn("focustarget","oUF_FocusTarget")
