@@ -361,6 +361,7 @@ function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
         local unit = "target"
         if not UnitIsPlayer(unit) then
             self:Hide()
+            return
         end
         local maxPrio = 0
         local maxPrioFilter
@@ -404,7 +405,7 @@ function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
         self:Update()
     end)
     LibSpellLocks.RegisterCallback(portIconFrame, "UPDATE_INTERRUPT", function(event, guid)
-        if UnitGUID("target") == guid then
+        -- if UnitGUID("target") == guid then
             portIconFrame:Update()
         end
     end)
