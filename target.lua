@@ -42,16 +42,16 @@ oUF.Tags.Events["tankthreat"] = "UNIT_THREAT_LIST_UPDATE"
 oUF.Tags.Methods["tankthreat"] = function(unit)
     local isTanking, status, percentage, rawPercentage = UnitDetailedThreatSituation("player", unit)
     if isTanking then
-        lead = UnitThreatPercentageOfLead("player", unit)
+        local lead = UnitThreatPercentageOfLead("player", unit)
         if not lead or lead == 0 then return end
         if lead > 999 then lead = 999 end
-        leadhex = ns:GetThresholdHexColor(lead, 100, 130, 200, 400)
+        local leadhex = ns:GetThresholdHexColor(lead, 100, 130, 200, 400)
         -- print(isTanking, lead)
         return format("|cff%s%d|r", leadhex, lead)
     elseif percentage and percentage > 50 then
         -- threathex = ns:GetThresholdHexColor(rawPercentage, 0, 100, 110)
         -- return format("|cff%s%d|r", threathex, rawPercent)
-        threathex = ns:GetThresholdHexColor(percentage, 100, 0)
+        local threathex = ns:GetThresholdHexColor(percentage, 100, 0)
         -- print(isTanking, percentage, rawPercentage)
         return format("|cff%s%d|r", threathex, percentage)
     end

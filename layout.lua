@@ -18,10 +18,14 @@ target:SetScale(0.85)
 
 
 if not isClassic then
-oUF:RegisterStyle("oUF_NugFocusFrame", ns.oUF_NugTargetFrame(focusCastbar))
-oUF:SetActiveStyle("oUF_NugFocusFrame")
-local focus = oUF:Spawn("focus","oUF_Focus")
-focus:SetPoint("LEFT", UIParent, "CENTER", 230, 140)
+    oUF:RegisterStyle("oUF_NugFocusFrame", ns.oUF_NugTargetFrame(focusCastbar))
+    oUF:SetActiveStyle("oUF_NugFocusFrame")
+    local focus = oUF:Spawn("focus","oUF_Focus")
+    focus:SetPoint("LEFT", UIParent, "CENTER", 230, 140)
+    if createFocusTarget then
+        local focustarget = oUF:Spawn("focustarget","oUF_FocusTarget")
+        focustarget:SetPoint("BOTTOM",focus,"TOP",61,-15)
+    end
 end
 
 
@@ -31,11 +35,6 @@ local targettarget = oUF:Spawn("targettarget","oUF_TargetTarget")
 -- targettarget:SetPoint("BOTTOM",target,"TOP",61,-15)
 targettarget:SetPoint("BOTTOM",target,"TOP",55,-15)
 targettarget:SetScale(0.9)
-
-if createFocusTarget then
-    local focustarget = oUF:Spawn("focustarget","oUF_FocusTarget")
-    focustarget:SetPoint("BOTTOM",focus,"TOP",61,-15)
-end
 
 
 
