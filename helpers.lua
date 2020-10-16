@@ -74,24 +74,22 @@ ranges = {
         CondemnExecute, CondemnExecute, CondemnExecute,
     },
     ROGUE = {
-        function() return IsPlayerSpell(111240) and SimplePercentCheck(0.30) end, -- blindside
+        function() return IsPlayerSpell(328085) and SimplePercentCheck(0.30) end, -- blindside
     },
     WARLOCK = {
         function() return IsPlayerSpell(198590) and SimplePercentCheck(0.20) end, -- drain soul
     },
     PRIEST = {
-        Wrap(SimplePercentCheck(0.2)), Wrap(SimplePercentCheck(0.2)), Wrap(SimplePercentCheck(0.2))
-        -- [3] = function() return (IsPlayerSpell(109142) and SimplePercentCheck(0.35)) or (IsPlayerSpell(32379) and SimplePercentCheck(0.20)) end, -- twist of fate or swd
+        Wrap(SimplePercentCheck(0.20)), Wrap(SimplePercentCheck(0.20)), Wrap(SimplePercentCheck(0.20)),
     },
     PALADIN = {
         Wrap(SimplePercentCheck(0.20)), Wrap(SimplePercentCheck(0.20)), Wrap(SimplePercentCheck(0.20)),
     },
     HUNTER = {
-        function() return IsPlayerSpell(273887) and SimplePercentCheck(0.35) end, -- Killer Instinct
-        function() return IsPlayerSpell(260228) and SimplePercentCheck(0.30) end, -- Careful Aim
+        Wrap(SimplePercentCheck(0.20)), Wrap(SimplePercentCheck(0.20)), Wrap(SimplePercentCheck(0.20)),
     },
     MONK = {
-        TouchOfDeath, TouchOfDeath, TouchOfDeath
+        Wrap(SimplePercentCheck(0.15)), Wrap(SimplePercentCheck(0.15)), Wrap(SimplePercentCheck(0.15)),
     },
 }
 end
