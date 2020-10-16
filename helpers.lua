@@ -74,7 +74,7 @@ ranges = {
         CondemnExecute, CondemnExecute, CondemnExecute,
     },
     ROGUE = {
-        function() return IsPlayerSpell(328085) and SimplePercentCheck(0.30) end, -- blindside
+        function() return IsPlayerSpell(328085) and SimplePercentCheck(0.35) end, -- blindside
     },
     WARLOCK = {
         function() return IsPlayerSpell(198590) and SimplePercentCheck(0.20) end, -- drain soul
