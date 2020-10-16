@@ -433,7 +433,6 @@ function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
 
     hp.colorTapping = true
     hp.colorDisconnected = true
-    -- hp.frequentUpdates = true
     hp.colorHealth = true
     hp.Smooth = true
 
@@ -518,9 +517,13 @@ function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
         return OriginalSetMinMaxValues(self, min, max)
     end
 
-
     self.Health = hp
     self.Health.PostUpdate = PostUpdateHealth
+    self.Health.UpdateColor = function(frame, event, unit)
+        local element = frame.Health
+        local cur, max = UnitHealth(unit), UnitHealthMax(unit)
+        element:PostUpdate(unit, cur, max)
+    end
 
     local mp_height = 10
 
@@ -810,7 +813,6 @@ function ns.oUF_NugTargetTargetFrame(self, unit)
 
     hp.colorTapping = true
     hp.colorDisconnected = true
-    hp.frequentUpdates = true
     hp.colorHealth = true
     -- hp.Smooth = true
 
