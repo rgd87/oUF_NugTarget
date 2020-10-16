@@ -407,7 +407,7 @@ function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
     LibSpellLocks.RegisterCallback(portIconFrame, "UPDATE_INTERRUPT", function(event, guid)
         -- if UnitGUID("target") == guid then
             portIconFrame:Update()
-        end
+        -- end
     end)
 
 
