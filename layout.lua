@@ -15,6 +15,7 @@ local target = oUF:Spawn("target","oUF_Target")
 -- target:SetPoint("LEFT", UIParent, "CENTER", 332, -81) -- 0.8
 target:SetPoint("LEFT", UIParent, "CENTER", 305, -81) -- 0.85
 target:SetScale(0.85)
+target.Name:SetScale(1.15)
 
 
 if not isClassic then
