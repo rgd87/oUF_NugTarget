@@ -317,7 +317,11 @@ function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
     port:SetWidth(portsize)
     port:SetHeight(portsize)
     port:SetFrameStrata("LOW")
-    port:SetPoint("TOPRIGHT",self,"TOPRIGHT",-25,-20)
+    if not ns.isFlipped then
+        port:SetPoint("TOPRIGHT",self,"TOPRIGHT",-25,-20)
+    else
+        port:SetPoint("TOPLEFT",self,"TOPLEFT", 25,-20)
+    end
 
     local portbg = port:CreateTexture(nil, "BACKGROUND")
     portbg:SetTexture[[Interface\AddOns\oUF_NugTarget\target\portBG.tga]]
@@ -429,7 +433,11 @@ function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
     hp:GetStatusBarTexture():SetDrawLayer("ARTWORK",1)
     hp:SetHeight(height)
     hp:SetWidth(width)
-    hp:SetPoint("TOPLEFT",self,"TOPLEFT",19,-20)
+    if not ns.isFlipped then
+        hp:SetPoint("TOPLEFT",self,"TOPLEFT",19,-20)
+    else
+        hp:SetPoint("TOPRIGHT",self,"TOPRIGHT", -19,-20)
+    end
 
     hp.colorTapping = true
     hp.colorDisconnected = true
@@ -533,7 +541,11 @@ function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
     mp:GetStatusBarTexture():SetDrawLayer("ARTWORK",1)
     mp:SetHeight(mp_height)
     mp:SetWidth(width)
-    mp:SetPoint("TOPLEFT",self,"TOPLEFT",19,-50)
+    if not ns.isFlipped then
+        mp:SetPoint("TOPLEFT",self,"TOPLEFT",19,-50)
+    else
+        mp:SetPoint("TOPRIGHT",self,"TOPRIGHT",-19,-50)
+    end
 
 
     mp.colorPower = true
@@ -585,7 +597,11 @@ function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
     bg:SetPoint("TOPLEFT", self, "TOPLEFT",0,0)
     bg:SetWidth(307)
     bg:SetHeight(104)
-    bg:SetTexture[[Interface\AddOns\oUF_NugTarget\target\targetBG]]
+    if ns.isFlipped then
+        bg:SetTexture[[Interface\AddOns\oUF_NugTarget\target\targetBG_Flipped]]
+    else
+        bg:SetTexture[[Interface\AddOns\oUF_NugTarget\target\targetBG]]
+    end
     bg:SetTexCoord(0,1,0,0.67)
 
 --~ 	self.OverrideUpdateHealth = OverrideUpdateHealth

@@ -8,6 +8,7 @@ local petCastbar = false
 
 local isClassic = select(4,GetBuildInfo()) <= 19999
 
+ns.isFlipped = true
 oUF:RegisterStyle("oUF_NugTargetFrame", ns.oUF_NugTargetFrame(targetCastbar))
 oUF:SetActiveStyle("oUF_NugTargetFrame")
 local target = oUF:Spawn("target","oUF_Target")
@@ -34,7 +35,11 @@ oUF:RegisterStyle("oUF_NugTargetTargetFrame", ns.oUF_NugTargetTargetFrame)
 oUF:SetActiveStyle("oUF_NugTargetTargetFrame")
 local targettarget = oUF:Spawn("targettarget","oUF_TargetTarget")
 -- targettarget:SetPoint("BOTTOM",target,"TOP",61,-15)
-targettarget:SetPoint("BOTTOM",target,"TOP",55,-15)
+if ns.isFlipped then
+    targettarget:SetPoint("BOTTOM",target,"TOP",-55,-15)
+else
+    targettarget:SetPoint("BOTTOM",target,"TOP",55,-15)
+end
 targettarget:SetScale(0.9)
 
 
