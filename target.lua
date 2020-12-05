@@ -1,9 +1,9 @@
 local addonName, ns = ...
 
-local font1 = [[Interface\AddOns\oUF_NugTarget\fonts\iFlash 706.TTF]]
+local font1 = [[Interface\AddOns\oUF_NugTarget\fonts\if706.TTF]]
 local font1size = 8
---~ local font2 = [[Interface\AddOns\oUF_NugTarget\fonts\Unvers.TTF]]
---~ local font2 = [[Interface\AddOns\oUF_NugTarget\fonts\iFlash 706.TTF]]
+-- local font2 = [[Interface\AddOns\oUF_NugTarget\fonts\Unvers.TTF]]
+-- local font2 = [[Interface\AddOns\oUF_NugTarget\fonts\if706.TTF]]
 local font2 = [[Interface\AddOns\oUF_NugTarget\fonts\AlegreyaSans-Bold.ttf]]
 local font3 = [[Interface\AddOns\oUF_NugTarget\fonts\AlegreyaSans-Bold.ttf]]
 local font2size = 13
@@ -708,21 +708,29 @@ function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
     end
 
     local buffs = CreateFrame("Frame", "$parentBuffs", self)
-    buffs:SetPoint("TOPLEFT", self, "TOPRIGHT",-5,-10)
     buffs:SetHeight(24)
     buffs:SetWidth(72)
     buffs.PostCreateIcon = PostCreate
+    buffs.num = 12
 
     buffs.size = 24
-    buffs.initialAnchor = "TOPLEFT"
-    buffs["growth-x"] = "RIGHT"
-    buffs["growth-y"] = "DOWN"
+    if not ns.isFlipped then
+        buffs:SetPoint("TOPLEFT", self, "TOPRIGHT",-5,-10)
+        buffs.initialAnchor = "TOPLEFT"
+        buffs["growth-x"] = "RIGHT"
+        buffs["growth-y"] = "DOWN"
+    else
+        buffs:SetPoint("BOTTOMRIGHT", self, "TOPRIGHT", -8, -7)
+        buffs.initialAnchor = "BOTTOMRIGHT"
+        buffs["growth-x"] = "LEFT"
+        buffs["growth-y"] = "UP"
+        buffs:SetWidth(96)
+    end
 
     self.Buffs = buffs
 
     -- Debuffs
     local debuffs = CreateFrame("Frame", "$parentDebuffs", self)
-    debuffs:SetPoint("TOPLEFT", self, "BOTTOMLEFT",57,-1)
     debuffs:SetHeight(1)
     debuffs:SetWidth(150)
     debuffs.num = 16
@@ -741,10 +749,20 @@ function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
     end
 
     debuffs.showDebuffType = true
-    debuffs.initialAnchor = "TOPLEFT"
-    debuffs["growth-x"] = "RIGHT"
-    debuffs["growth-y"] = "DOWN"
     debuffs.size = 24--28
+
+    if not ns.isFlipped then
+        debuffs:SetPoint("TOPLEFT", self, "BOTTOMLEFT",57,-1)
+        debuffs.initialAnchor = "TOPLEFT"
+        debuffs["growth-x"] = "RIGHT"
+        debuffs["growth-y"] = "DOWN"
+    else
+        debuffs:SetPoint("TOPLEFT", self, "BOTTOMLEFT",105,-1)
+        debuffs.initialAnchor = "TOPLEFT"
+        debuffs["growth-x"] = "RIGHT"
+        debuffs["growth-y"] = "DOWN"
+        debuffs:SetWidth(192)
+    end
 
     self.Debuffs = debuffs
 

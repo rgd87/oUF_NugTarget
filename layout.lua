@@ -17,6 +17,9 @@ local target = oUF:Spawn("target","oUF_Target")
 target:SetPoint("LEFT", UIParent, "CENTER", 305, -81) -- 0.85
 target:SetScale(0.85)
 target.Name:SetScale(1.15)
+if ns.isFlipped then
+    target:SetPoint("LEFT", UIParent, "CENTER", 375, -81) -- 0.85
+end
 
 
 if not isClassic then
@@ -36,7 +39,7 @@ oUF:SetActiveStyle("oUF_NugTargetTargetFrame")
 local targettarget = oUF:Spawn("targettarget","oUF_TargetTarget")
 -- targettarget:SetPoint("BOTTOM",target,"TOP",61,-15)
 if ns.isFlipped then
-    targettarget:SetPoint("BOTTOM",target,"TOP",-55,-15)
+    targettarget:SetPoint("BOTTOM",target,"TOP",-25,-15)
 else
     targettarget:SetPoint("BOTTOM",target,"TOP",55,-15)
 end
