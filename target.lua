@@ -611,7 +611,7 @@ function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
     --==< HEALTH BAR TEXT >==--
 
 
-    local hppp = self.Portrait:CreateFontString(nil, "OVERLAY", self)
+    local hppp = self.Portrait:CreateFontString(nil, "OVERLAY")
     hppp:SetFont(font1,font1size,"OUTLINE")
     hppp:SetJustifyH"LEFT"
     hppp:SetTextColor(0, 1, 0)
@@ -620,7 +620,7 @@ function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
 
     self.hppp = hppp
 
-    local hpp = self.Portrait:CreateFontString(nil, "OVERLAY", self)
+    local hpp = self.Portrait:CreateFontString(nil, "OVERLAY")
     hpp:SetFont(font1,font1size,"OUTLINE")
     hpp:SetJustifyH"LEFT"
     hpp:SetTextColor(0, 1, 0)
@@ -632,7 +632,7 @@ function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
     self.hpp = hpp
 
 	--==< LEVEL TEXT >==--
-    local info = self.Portrait:CreateFontString(nil, "OVERLAY", self.Portrait)
+    local info = self.Portrait:CreateFontString(nil, "OVERLAY")
     info:SetFont(font1,font1size,"OUTLINE")
     info:SetJustifyH"RIGHT"
     info:SetTextColor(0, 1, 0)
@@ -646,7 +646,7 @@ function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
 
     --==< THREAT BAR >==--
     if not isClassic and unit == "target" then
-        local threatp = self.Portrait:CreateFontString(nil, "OVERLAY", self)
+        local threatp = self.Portrait:CreateFontString(nil, "OVERLAY")
         threatp:SetFont(font1,font1size,"OUTLINE")
         threatp:SetJustifyH"LEFT"
         -- threatp:SetTextColor(0, 1, 0)
@@ -671,7 +671,7 @@ function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
     end
 
     --==< NAME TEXT >==--
-    local name = hp:CreateFontString(nil, "OVERLAY", self.Health)
+    local name = hp:CreateFontString(nil, "OVERLAY")
     name:SetFont(font2,font2size,"OUTLINE")
     name:SetJustifyH"LEFT"
     name:SetTextColor(0,1,0)
@@ -767,12 +767,12 @@ function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
     self.Debuffs = debuffs
 
     if addCastbar then
-        local cw,ch = 207, 18
+        local cw,ch = 320, 27
         local castbar = ns:CreateCastbar(self, cw, ch, true)
         castbar:SetColor(0.6, 0, 1)
 
-        castbar:SetPoint("TOPLEFT", self, "BOTTOMLEFT",32,-2)
-        debuffs:SetPoint("TOPLEFT", self, "BOTTOMLEFT",45,-4-ch)
+        castbar:SetPoint("TOPLEFT", self, "BOTTOMLEFT",40,-28)
+        -- debuffs:SetPoint("TOPLEFT", self, "BOTTOMLEFT",45,-4-ch)
 
         self.Castbar = castbar
     end
@@ -780,7 +780,7 @@ function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
 
 
     --==< LEADER ICON >==--
-    local leader = self:CreateFontString(nil, "OVERLAY", self)
+    local leader = self:CreateFontString(nil, "OVERLAY")
     leader:SetFont(font1,font1size+1,"OUTLINE")
     leader:SetJustifyH"LEFT"
     leader:SetTextColor(0, 1, 0)
@@ -868,7 +868,7 @@ function ns.oUF_NugTargetTargetFrame(self, unit)
     bg:SetTexCoord(0,1,0,88/128)
 
      --==< NAME TEXT >==--
-    local name = hp:CreateFontString(nil, "OVERLAY", self.Health)
+    local name = hp:CreateFontString(nil, "OVERLAY")
     name:SetFont(font2,font2size-2)
     name:SetNonSpaceWrap(false)
     name:SetJustifyH"LEFT"
