@@ -481,9 +481,9 @@ function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
         -- local ambientSmoke = MakeModelRegion(sf, hp:GetWidth(), hp:GetHeight(), 1249924,  3,0,1.2 )
         -- ambientSmoke:SetAlpha(0.7)
         ambientSmoke:SetAllPoints(sf)
-    end
 
-    sf:SetScrollChild(ambientSmoke)
+        sf:SetScrollChild(ambientSmoke)
+    end
 
     hp.model = sf
 
@@ -527,8 +527,7 @@ function ns.oUF_NugTargetFrame1( self, unit, addCastbar)
 
     self.Health = hp
     self.Health.PostUpdate = PostUpdateHealth
-    self.Health.UpdateColor = function(frame, event, unit)
-        local element = frame.Health
+    self.Health.UpdateColor = function(element, event, unit)
         local cur, max = UnitHealth(unit), UnitHealthMax(unit)
         element:PostUpdate(unit, cur, max)
     end
